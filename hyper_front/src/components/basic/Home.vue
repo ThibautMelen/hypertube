@@ -1,6 +1,5 @@
 <template>
 <div>
-    <h1>{{hello}}</h1>
 </div>
 </template>
 
@@ -26,6 +25,3 @@ export default {
 }
 
 </script>
-
-<style type="text/css" scoped>
-</style>

@@ -26,6 +26,3 @@ export default {
 }
 
 </script>
-
-<style type="text/css" scoped>
-</style>

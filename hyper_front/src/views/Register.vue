@@ -3,7 +3,7 @@
     <section class="register">
         <!-- NAV -->
         <nav>
-            <img class="bounceInDown" src="../assets/cornflux.png" alt="">
+            <img class="bounceInDown" src="../assets/logo/logo_large_cornflux.png" alt="Logo Cornflux">
         </nav>
 
         <!-- BG WALLPAPER -->

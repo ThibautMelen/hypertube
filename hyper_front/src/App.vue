@@ -8,7 +8,6 @@
 </template>
 
 <script>
-// import compHeader from  './components/Header-Footer/Header'
 
 export default {
   // components:{

@@ -24,8 +24,9 @@ body{
 	overflow-x: hidden;
 	overflow-y: scroll;
     background-color: $batman;
-    font-family: 'Montserrat', sans-serif!important;
-
+}
+*{
+	font-family: 'Montserrat', sans-serif!important;
 }
 
 input, button, input:focus, textarea:focus, select:focus{
@@ -40,6 +41,7 @@ button, nav, input, textarea{
 button, input, textarea{
 	border: 0;
 	-webkit-appearance: none;
+	font-family: inherit;
 }
 
 ul, li{
@@ -73,6 +75,29 @@ a{
 	box-sizing: border-box;
 }
 
-a:hover{
-	text-decoration: none;
+a:hover, li:hover{
+	text-decoration: none!important;
+}
+
+
+// SEARCH OVERWRITE
+.md-menu-content {
+	top: 70px!important;
+}
+.md-autocomplete-box-content:after {
+    background: none!important;
+    border: none!important;
+}
+.md-autocomplete-box-content:after {
+    // height: 126px!important;
+    position: absolute;
+    top: -6px;
+    right: 0;
+    left: 0;
+    z-index: 13;
+    border-bottom: 1px solid;
+    content: "";
+}
+.md-menu-content-container .md-list {
+    background-color: $vador!important;
 }

@@ -1,4 +1,40 @@
 /*****************************************************************
+	ANIMATION HOVER
+*****************************************************************/
+
+/**** HVR UP  ****/
+.hvr-up {
+    transition-duration: .27s;
+    transition-property: transform;
+}
+.hvr-up:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/**** HVR UP MIN ****/
+.hvr-up-min {
+    transform: perspective(1.1px) translateZ(0);
+    transition-duration: .27s;
+    transition-property: transform;
+}
+.hvr-up-min:hover {
+    transform: scale(1.025);
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*****************************************************************
 	ANIMATION
 *****************************************************************/
 
@@ -53,13 +89,11 @@
       opacity: 1;
       transform: translate3d(0, 0, 0);
     }
-  }
-  
-  .fadeInDownBig {
-    animation: fadeInDownBig .7s ease-out 0s 1 normal forwards running;
-  }
+}
 
-
+.fadeInDownBig {
+animation: fadeInDownBig .7s ease-out 0s 1 normal forwards running;
+}
 
 
 /********* flipInY *********/
@@ -95,7 +129,42 @@ animation: flipInY 2s ease-out 0s 1 normal forwards running;
 
 }
 
-
+/********* BOUNCEINLEFT *********/
+@keyframes bounceInLeft {
+    from,
+    60%,
+    75%,
+    90%,
+    to {
+      animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+  
+    0% {
+      opacity: 0;
+      transform: translate3d(-3000px, 0, 0);
+    }
+  
+    60% {
+      opacity: 1;
+      transform: translate3d(25px, 0, 0);
+    }
+  
+    75% {
+      transform: translate3d(-10px, 0, 0);
+    }
+  
+    90% {
+      transform: translate3d(5px, 0, 0);
+    }
+  
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  
+  .bounceInLeft {
+    animation: bounceInLeft .5s ease-out 0s 1 normal forwards running;
+  }
 
 
 /********* BOUNCEINDOWN *********/
@@ -132,7 +201,7 @@ to {
 }
 
 .bounceInDown {
-    animation: bounceInDown 1s ease-out 0s 1 normal forwards running;
+    animation: bounceInDown .5s ease-out 0s 1 normal forwards running;
 }
 
 

@@ -3,7 +3,7 @@
     <section class="reset">
         <!-- NAV -->
         <nav>
-            <img src="../assets/cornflux.png" alt="">
+            <img src="../assets/logo/logo_large_cornflux.png" alt="Logo Cornflux">
         </nav>
 
         <!-- BG WALLPAPER -->
@@ -116,7 +116,7 @@ section.reset div.box-container {
     align-items: center;
     div.box {
         width: 450px;
-        background: #ffffffd4;;
+        background: $white_light;
         border-radius: 20px;
         padding: 60px 60px 50px 60px;
         h2 {

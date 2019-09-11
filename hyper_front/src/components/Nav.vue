@@ -117,13 +117,17 @@ export default {
 *****************************************************************/
 nav {
     // GLOBAL
+    position: fixed;
+    width: 100%;
+    z-index: 2;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 70px;
     padding: 5px 4% 0px 4%;
-    background-image: linear-gradient(90deg,#26303f 0,#26303f 0,#303d54 81%,#303d54);
-    box-shadow: 0px 50px 50px -50px $arkham;
+    background-image: linear-gradient(90deg,#26303f 0,#26303f 0, #303d54b7 81%,#303d54);
+    box-shadow: 0px 0px 20px 10px $vador;
 
     //LOGO LEFT
     a.logo {
@@ -192,7 +196,7 @@ nav {
                 right: calc(4% + 15px);
                 width: 210px;
                 background-color: $blackpearl;
-                box-shadow: 10px 10px 20px 20px $vador;
+                box-shadow: 0px 0px 10px 7px #212f3e82;
                 border-radius: 5px;
                 
                 transform: translateY(25px);
@@ -289,7 +293,7 @@ nav {
         }
         ul {
             width: 100%!important;
-            position: absolute!important;
+            position: fixed!important;
             right: 0!important;
             top: unset!important;
             bottom: 0!important;

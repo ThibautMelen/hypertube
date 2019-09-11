@@ -84,16 +84,6 @@ export default {
 
 @import '../styles/_global.scss';
 
-
-  .example-slide {
-    align-items: center;
-    background-color: #666;
-    color: #999;
-    display: flex;
-    font-size: 1.5rem;
-    justify-content: center;
-    min-height: 10rem;
-  }
 section.home {
         div.slide {
             width: 100%;
@@ -105,7 +95,7 @@ section.home {
                 background-position: 50% 10%;
                 width: 100%;
                 height: 300px;
-                box-shadow: inset 0px 0px 20px 20px $vador;
+                box-shadow: inset 0px 0px 20px 20px #212f3ec2;
 
                 display: flex;
                 align-items: flex-end;

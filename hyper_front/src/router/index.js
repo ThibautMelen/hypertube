@@ -10,8 +10,7 @@ import Reset2Comp from '../views/ResetPassPart2.vue';
 
 //Connected VIEWS
 import HomeComp from '../views/Home.vue';
-
-
+import PlayerComp from '../views/Player.vue';
 
 Vue.use(Router)
 
@@ -47,6 +46,11 @@ export default new Router({
       path: '/',
       name: 'HomeComp',
       component: HomeComp
+    },
+    {
+      path: '/player',
+      name: 'PlayerComp',
+      component: PlayerComp
     },
   ]
 })

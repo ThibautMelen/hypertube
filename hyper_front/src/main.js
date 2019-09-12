@@ -5,6 +5,11 @@ import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import VueCarousel from 'vue-carousel';
 
+// In your main vue file - the one where you create the initial vue instance.
+import VuePlyr from 'vue-plyr'
+
+Vue.use(VuePlyr)
+
 Vue.use(VueMaterial)
 Vue.use(VueCarousel);
 

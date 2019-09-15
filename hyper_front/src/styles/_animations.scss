@@ -1,0 +1,261 @@
+/*****************************************************************
+	ANIMATION HOVER
+*****************************************************************/
+
+/**** HVR UP  ****/
+.hvr-up {
+    transition-duration: .27s;
+    transition-property: transform;
+}
+.hvr-up:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/**** HVR UP MIN ****/
+.hvr-up-min {
+    transform: perspective(1.1px) translateZ(0);
+    transition-duration: .27s;
+    transition-property: transform;
+}
+.hvr-up-min:hover {
+    transform: scale(1.025);
+    cursor: pointer;
+}
+
+/**** HVR BOUNCE ****/
+.hvr-rectangle-in {
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-transform: perspective(1px) translateZ(0);
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    position: relative;
+    background: $dany;
+    -webkit-transition-property: color;
+    transition-property: color;
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    border-radius: 15px;
+  }
+  .hvr-rectangle-in:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $dany;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transition-property: transform;
+    transition-property: transform;
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    -webkit-transition-timing-function: ease-out;
+    transition-timing-function: ease-out;
+    border-radius: 15px;
+  }
+  .hvr-rectangle-in:hover {
+    color: white;
+  }
+  .hvr-rectangle-in:hover:before {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+
+
+
+
+
+
+
+
+
+/*****************************************************************
+	ANIMATION
+*****************************************************************/
+
+/********* FORWARD *********/
+.hvr-forward {
+    display: inline-block;
+    vertical-align: middle;
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    transition-duration: .4s;
+    transition-property: transform;
+}
+.hvr-forward:hover, .hvr-forward:focus, .hvr-forward:active {
+    transform: translateX(12px);
+}
+  
+/********* lightSpeedIn *********/
+@keyframes lightSpeedIn {
+0% {
+    transform: translate3d(100%, 0, 0) skewX(-10deg);
+    opacity: 0;
+}
+
+60% {
+    transform: skewX(5deg);
+    opacity: 1;
+}
+
+80% {
+    transform: skewX(-2deg);
+}
+
+100% {
+    transform: translate3d(0, 0, 0);
+}
+}
+
+.lightSpeedIn {
+    animation-timing-function: ease-out;
+    animation: lightSpeedIn 1.3s ease-out 0s 1 normal forwards running;
+
+}
+
+/********* fadeInDownBig *********/
+@keyframes fadeInDownBig {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -2000px, 0);
+    }
+  
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+}
+
+.fadeInDownBig {
+animation: fadeInDownBig .7s ease-out 0s 1 normal forwards running;
+}
+
+
+/********* flipInY *********/
+@keyframes flipInY {
+from {
+    transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
+    animation-timing-function: ease-in;
+    opacity: 0;
+}
+
+40% {
+    transform: perspective(400px) rotate3d(0, 1, 0, -20deg);
+    animation-timing-function: ease-in;
+}
+
+60% {
+    transform: perspective(400px) rotate3d(0, 1, 0, 10deg);
+    opacity: 1;
+}
+
+80% {
+    transform: perspective(400px) rotate3d(0, 1, 0, -5deg);
+}
+
+to {
+    transform: perspective(400px);
+}
+}
+
+.flipInY {
+backface-visibility: visible !important;
+animation: flipInY 2s ease-out 0s 1 normal forwards running;
+
+}
+
+/********* BOUNCEINLEFT *********/
+@keyframes bounceInLeft {
+    from,
+    60%,
+    75%,
+    90%,
+    to {
+      animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+  
+    0% {
+      opacity: 0;
+      transform: translate3d(-3000px, 0, 0);
+    }
+  
+    60% {
+      opacity: 1;
+      transform: translate3d(25px, 0, 0);
+    }
+  
+    75% {
+      transform: translate3d(-10px, 0, 0);
+    }
+  
+    90% {
+      transform: translate3d(5px, 0, 0);
+    }
+  
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  
+  .bounceInLeft {
+    animation: bounceInLeft .5s ease-out 0s 1 normal forwards running;
+  }
+
+
+/********* BOUNCEINDOWN *********/
+@keyframes bounceInDown {
+from,
+60%,
+75%,
+90%,
+to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+0% {
+    opacity: 0;
+    transform: translate3d(0, -3000px, 0);
+}
+
+60% {
+    opacity: 1;
+    transform: translate3d(0, 25px, 0);
+}
+
+75% {
+    transform: translate3d(0, -10px, 0);
+}
+
+90% {
+    transform: translate3d(0, 5px, 0);
+}
+
+to {
+    transform: translate3d(0, 0, 0);
+}
+}
+
+.bounceInDown {
+    animation: bounceInDown .5s ease-out 0s 1 normal forwards running;
+}
+
+
+
+
+/********* BIM BOOM *********/
+@keyframes bimboom {
+	0% { transform: scale3d(1, 1, 1);}  
+	30% { transform: scale3d(1.25, 0.75, 1);}  
+	40% { transform: scale3d(0.75, 1.25, 1);}  
+	50% { transform: scale3d(1.15, 0.85, 1);}  
+	65% { transform: scale3d(0.95, 1.05, 1);}  
+	75% { transform: scale3d(1.05, 0.95, 1);}  
+	100% { transform: scale3d(1, 1, 1);}
+}
+.bimboom {
+	animation: bimboom 2.5s ease-out 0s 1 normal forwards running;
+}

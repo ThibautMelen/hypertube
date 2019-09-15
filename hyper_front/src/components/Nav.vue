@@ -30,8 +30,9 @@
             <div class="account">
                 <img v-bind:src="`${userInfos.avatar}`" alt="avatar" class="hvr-up-min">
                 <ul>
-                    <router-link tag="a" to="/"><li>Profile</li></router-link>
-                    <router-link tag="a" to="/"><li>Settings</li></router-link>
+                    <router-link tag="a" to="/profile/1"><li>Profile</li></router-link>
+                    <router-link tag="a" to="/settings"><li>Settings</li></router-link>
+
                     <a @click="logout()"><li>log out</li></a>
                 </ul>
             </div>

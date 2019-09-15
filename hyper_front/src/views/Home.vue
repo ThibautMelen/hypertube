@@ -42,24 +42,15 @@
 
         </header>
 
-        <section class="catalog">
-            <h1>The Most Popular 🍿</h1>
-
-    <div class="listMovies">
-        <router-link tag="div" to="/" v-for="(item, index) in catalog" :key="index">
-            <div class="hvr-up-min" :style="{'background-image':`url(${item.cover})`}">
-                <p>{{ item.title }}</p>
-            </div>
-        </router-link>
-    </div>
+        <comp-catalog title="The Most Popular 🍿" v-if="true"/>
 
 
-        </section>
     </section>
 </template>
 
 <script>
 import compNav from  '../components/Nav'
+import compCatalog from  '../components/Catalog'
 
 import {showAt, hideAt} from 'vue-breakpoints'
 import { Carousel, Slide } from 'vue-carousel';
@@ -86,58 +77,6 @@ export default {
         return {
             hello: `hey what's up`,
             searching: false,
-            catalog: [
-                {
-                    title: "16 Blocks",
-                    cover: "https://img.yts.lt/assets/images/movies/16_Blocks_2006/large-cover.jpg"
-                },
-                {
-                    title: "Avengers: Endgame",
-                    cover: "https://img.yts.lt/assets/images/movies/avengers_endgame_2019/large-cover.jpg"
-                },
-                {
-                    title: "Jurassic Park",
-                    cover: "https://img.yts.lt/assets/images/movies/jurassic_park_1993/large-cover.jpg",
-                    screen: "https://img.yts.lt/assets/images/movies/Jurassic_Park_1993/large-screenshot1.jpg"
-                },
-                {
-                    title: "Catch Me If You Can",
-                    cover: "https://img.yts.lt/assets/images/movies/catch_me_if_you_can_2002/large-cover.jpg"
-                },
-                {
-                    title: "Kill Bill: Vol. 1",
-                    cover: "https://img.yts.lt/assets/images/movies/kill_bill_vol_1_2003/large-cover.jpg"
-                },
-                {
-                    title: "Inglourious Basterds",
-                    cover: "https://img.yts.lt/assets/images/movies/Inglourious_Basterds_2009/large-cover.jpg"
-                },
-                {
-                    title: "16 Blocks",
-                    cover: "https://img.yts.lt/assets/images/movies/16_Blocks_2006/large-cover.jpg"
-                },
-                {
-                    title: "Avengers: Endgame",
-                    cover: "https://img.yts.lt/assets/images/movies/avengers_endgame_2019/large-cover.jpg"
-                },
-                {
-                    title: "Jurassic Park",
-                    cover: "https://img.yts.lt/assets/images/movies/jurassic_park_1993/large-cover.jpg",
-                    screen: "https://img.yts.lt/assets/images/movies/Jurassic_Park_1993/large-screenshot1.jpg"
-                },
-                {
-                    title: "Catch Me If You Can",
-                    cover: "https://img.yts.lt/assets/images/movies/catch_me_if_you_can_2002/large-cover.jpg"
-                },
-                {
-                    title: "Kill Bill: Vol. 1",
-                    cover: "https://img.yts.lt/assets/images/movies/kill_bill_vol_1_2003/large-cover.jpg"
-                },
-                {
-                    title: "Inglourious Basterds",
-                    cover: "https://img.yts.lt/assets/images/movies/Inglourious_Basterds_2009/large-cover.jpg"
-                },
-            ],
             slides:[
                 { bck: Slide1 },
                 { bck: Slide2 },
@@ -159,6 +98,7 @@ export default {
     },
     components: {
         compNav,
+        compCatalog,
         Carousel,
         Slide,
         hideAt,
@@ -200,76 +140,11 @@ section.home {
                 justify-content: center;
                 opacity: 1;
 
-                p {
-                    background-color: #212f3ed1;
-                    color: $eb;
-                    padding: 25px;
-                    border-radius: 15px 15px 0px 0px;
-                    font-size: 20px;
-                    text-transform: uppercase;
-                    font-weight: bold;
-                    text-align: center;
-                    box-shadow: 0px 0px 10px 7px #212f3e82;
-                }
-            }
-        }
-    }
 
-    section.catalog {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        padding: 15px 4%;
-
-        h1 {
-            color: $white;
-            font-size: 24px;
-            margin: 15px 0px 35px 0px;
-        }
-
-        div.listMovies {
-            display: flex;
-            align-items: baseline;
-            justify-content: center;
-            flex-direction: row;
-            flex-wrap: wrap;
-
-            div {
-                margin: 0px 10px 10px 0;
-                cursor: pointer;
-                background-size: cover;
-                background-repeat: no-repeat;
-                background-position: 50% 30%;
-                width: 300px;
-                height: 360px;
-                border-radius: 10px;
-
-                display: flex;
-                align-items: flex-end;
-                justify-content: center;
-
-                p {
-                    color: $white;
-                    background-color: #22303eea;
-                    padding: 12px 35px;
-                    border-radius: 15px 15px 0px 0px;
-                    font-size: 17px;
-                    white-space: nowrap;
-                    width: 100%;
-                    text-align: center;
-                }
-
-                // transition: all .5s ease-in-out;
-                // transition-delay: .1s;
-
-                // &:hover {
-                //     width: 420px;
-                // }
 
             }
         }
     }
-
 
 
 }

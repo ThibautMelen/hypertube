@@ -20,6 +20,10 @@
             <aside class="infoMovie">
                 <h1>{{ this.movie.title}}</h1>
                 <h2 class="eggs">{{ this.movie.date}} - {{ this.movie.time}}</h2>
+                <div class="watched hvr-up-min">
+                    <button @click="watched($event)" class="hvr-rectangle-in"> Watched ?</button>
+                </div>
+
                 <div class="imbd">
                     <img class="hvr-up-min" src="../assets/logo/imbd.png" alt="">
                     <h3 class="hvr-up-min">{{ this.movie.imbd}}</h3>
@@ -44,7 +48,7 @@
                 </div>
 
 
-               <div class="cast">
+                <div class="cast">
                     <h2>Director</h2>
                     <ul>
                         <li class="hvr-up-min" v-for="(item, index) in this.movie.director" :key="index">
@@ -56,7 +60,7 @@
                     </ul>
                 </div>
 
-               <div class="cast">
+                <div class="cast">
                     <h2>Casting</h2>
                     <ul>
                         <li class="hvr-up-min" v-for="(item, index) in this.movie.cast" :key="index">
@@ -69,6 +73,21 @@
                     </ul>
                 </div>
 
+
+                <div class="comment">
+                    <h2>Comment</h2>
+
+                    <div class="newCom">
+                        <textarea type="text">I like so much this movie ! 💙😱</textarea>
+                        <button class="hvr-up-min">New Com</button>
+                    </div>
+
+                </div>
+
+
+            
+            
+            
             </aside>
 
         </section>
@@ -130,6 +149,18 @@ export default {
     computed: {
     },
     methods:{
+        //LOGOUT
+        async watched(event) {
+            // await alert(`You added this movie to your watched list`);
+            this.color = "#01a3a4";
+            this.width = "2000px";
+
+            // let targetId = event.currentTarget.id;
+            // console.log(targetId); // returns 'foo'
+            // this
+
+        }
+
     },
     created() {
     },
@@ -151,7 +182,6 @@ export default {
 
 section.player {
     
-
     section.video  {
         // GLOBAL
         display: flex;
@@ -200,6 +230,7 @@ section.player {
                 font-weight: 700;
                 color: $deepurple;
             }
+
             h2.eggs {
                 margin-top: 10px;
                 margin-bottom: 10px;
@@ -207,6 +238,20 @@ section.player {
                 font-style: italic;
                 color: $poseidon;
             }
+
+            div.watched button{
+                cursor: pointer;
+                padding: 15px 25px;
+                color: $white;
+                background-color: $yoda;
+                font-size: 15px;
+                text-transform: uppercase;
+                margin: 5px 0 10px 0;
+                border-radius: 15px;
+                // background-color: red;
+
+            }
+
             div.imbd {
                 display: flex;
                 flex-direction: row;
@@ -304,8 +349,38 @@ section.player {
             }
 
 
+            div.comment {
+                width: 100%;
+                h2 {
+                    margin-top: 15px;
+                    margin-bottom: 10px;
+                    font-size: 16px;
+                    color: $joker;
+                }
+                div.newCom {
+                    display: flex;
+                    flex-direction: column;
+                    // border-top: 3px solid #94a0b014;
+                    // border-bottom: 3px solid #94a0b014;
+                    background-color: #eef1f7;
+                    // padding: 0px 15px 15px 15px;
+                    textarea {
+                        border-radius: 12px;
+                        padding: 11px 35px 11px 11px;
+                        margin-bottom: 10px;
+                        font-size: 12px;
+                        // height: 500px;
+                    }
 
-
+                    button {
+                        cursor: pointer;
+                        padding: 10px;
+                        background-color: $poseidon;
+                        color: $white;
+                        border-radius: 10px;
+                    }
+                }    
+            }
 
         }
     }

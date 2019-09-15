@@ -82,6 +82,18 @@
                         <button class="hvr-up-min">New Com</button>
                     </div>
 
+                    <div class="comList">
+                        <ul>
+                            <li class="hvr-up-min" v-for="(item, index) in this.movie.coms" :key="index">
+                                <img :src="item.url_small_image" alt="">
+                                <div>
+                                    <p>{{ item.name }}</p>
+                                    <p>{{ item.text }}</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
 
 
@@ -138,6 +150,18 @@ export default {
                         "character_name": "Bus Passenger",
                         "url_small_image": "https://yts.lt/assets/images/actors/thumb/nm0937239.jpg",
                         "imdb_code": "0937239"
+                    }
+                ],
+                coms: [
+                    {
+                        "name": "Jean Miche",
+                        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                        "url_small_image": "https://s3.eu-west-3.amazonaws.com/pikomit/users/5bfbddf776fd3817e1474e08/OVJbQPcvSI0Az3UAicw1zScbS2PCW01543251911479_75px.jpg",
+                    },
+                    {
+                        "name": "Eloise Bismila",
+                        "text": "Hendrerit dolor magna eget est lorem ipsum.",
+                        "url_small_image": "https://s3.eu-west-3.amazonaws.com/pikomit/users/5d3ee7eeaecac710d664cbe7/gnrt4GpziaEGCfy13gYxNzxxfsGuUM1567171874096_75px.jpg",
                     }
                 ],
             },
@@ -360,16 +384,12 @@ section.player {
                 div.newCom {
                     display: flex;
                     flex-direction: column;
-                    // border-top: 3px solid #94a0b014;
-                    // border-bottom: 3px solid #94a0b014;
                     background-color: #eef1f7;
-                    // padding: 0px 15px 15px 15px;
                     textarea {
                         border-radius: 12px;
                         padding: 11px 35px 11px 11px;
                         margin-bottom: 10px;
                         font-size: 12px;
-                        // height: 500px;
                     }
 
                     button {
@@ -379,7 +399,48 @@ section.player {
                         color: $white;
                         border-radius: 10px;
                     }
-                }    
+                }   
+                
+                div.comList {
+                    ul {
+                    display: flex;
+                    justify-content: row;
+                    flex-direction: row;
+                        li {
+                            display: flex;
+                            flex-direction: row; 
+                            align-items: flex-start;
+
+                            width: 100%;
+                            padding: 7px 10px;
+                            border-radius: 10px;
+                            background-color: #adb4b94f;
+                            margin: 8px 8px 0px 0px;
+                            font-size: 14px;
+                            color: $white;
+
+                            img {
+                                border-radius: 20px;
+                                width: 50px;
+                                height: 50px;
+                                background-color: $shut;
+                                border: none;
+                            }
+                            div {
+                                display: flex;
+                                flex-direction: column;
+                                margin-left: 20px;
+                                p {
+                                    color: $deepurple;
+                                }
+                                p:nth-child(2) {
+                                    line-height: 15px;
+                                    color: $shut;
+                                }
+                            }
+                        }
+                    }      
+                }
             }
 
         }

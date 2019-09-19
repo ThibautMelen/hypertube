@@ -42,13 +42,14 @@
 
         </header>
 
-        <comp-catalog title="The Most Popular 🍿" v-if="true"/>
-
+        <comp-catalog :title="$t('home.title')" v-if="true"/>
 
     </section>
 </template>
 
 <script>
+import i18n from '../i18n'
+
 import compNav from  '../components/Nav'
 import compCatalog from  '../components/Catalog'
 

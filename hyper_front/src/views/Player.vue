@@ -21,7 +21,7 @@
                 <h1>{{ this.movie.title}}</h1>
                 <h2 class="eggs">{{ this.movie.date}} - {{ this.movie.time}}</h2>
                 <div class="watched hvr-up-min">
-                    <button @click="watched($event)" class="hvr-rectangle-in"> Watched ?</button>
+                    <button @click="watched($event)" class="hvr-rectangle-in">{{$t('player.watched')}}</button>
                 </div>
 
                 <div class="imbd">
@@ -43,13 +43,13 @@
                 </vue-plyr>
 
                 <div class="dcpt">
-                    <h2>Synopsis</h2>
+                    <h2>{{$t('player.synopis')}}</h2>
                     <p>{{ this.movie.dcpt}}</p>
                 </div>
 
 
                 <div class="cast">
-                    <h2>Director</h2>
+                    <h2>{{$t('player.director')}}</h2>
                     <ul>
                         <li class="hvr-up-min" v-for="(item, index) in this.movie.director" :key="index">
                             <img :src="item.url_small_image" alt="">
@@ -61,12 +61,12 @@
                 </div>
 
                 <div class="cast">
-                    <h2>Casting</h2>
+                    <h2>{{$t('player.casting')}}</h2>
                     <ul>
                         <li class="hvr-up-min" v-for="(item, index) in this.movie.cast" :key="index">
                             <img :src="item.url_small_image" alt="">
                             <div>
-                                <p>{{ item.name }} <i>play</i></p>
+                                <p>{{ item.name }} <i>{{$t('player.play')}}</i></p>
                                 <p>{{ item.character_name }}</p>
                             </div>
                         </li>
@@ -75,11 +75,11 @@
 
 
                 <div class="comment">
-                    <h2>Comment</h2>
+                    <h2>{{$t('player.comment')}}</h2>
 
                     <div class="newCom">
                         <textarea type="text">I like so much this movie ! 💙😱</textarea>
-                        <button class="hvr-up-min">New Com</button>
+                        <button class="hvr-up-min">{{$t('player.newCom')}}</button>
                     </div>
 
                     <div class="comList">

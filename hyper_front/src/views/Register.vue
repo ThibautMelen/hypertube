@@ -13,22 +13,22 @@
         <!-- BOX -->
         <div class="box-container">
             <div class="box flipInY">
-                <h2>Sign up</h2>
+                <h2>{{$t('auth.titlereg')}}</h2>
                 <form @submit.prevent="register()">
                     <md-field>
-                        <label>First Name</label>
+                        <label>{{$t('auth.fName')}}</label>
                         <md-input type="text" v-model="formdata.first_name"></md-input>
                     </md-field>
                     <md-field>
-                        <label>Last Name</label>
+                        <label>{{$t('auth.lName')}}</label>
                         <md-input type="text" v-model="formdata.last_name"></md-input>
                     </md-field>
                     <md-field>
-                        <label>Username</label>
+                        <label>{{$t('auth.username')}}</label>
                         <md-input type="text" v-model="formdata.username"></md-input>
                     </md-field>
                     <md-field>
-                        <label for="font">Language</label>
+                        <label for="font">{{$t('auth.lang')}}</label>
                         <md-select name="font" id="font" type="text" v-model="formdata.language">
                             <md-option value="fr">Français</md-option>
                             <md-option value="en">English</md-option>
@@ -39,12 +39,12 @@
                         <md-input type="email" v-model="formdata.email"></md-input>
                     </md-field>
                     <md-field>
-                        <label>Password</label>
+                        <label>{{$t('auth.pass')}}</label>
                         <md-input type="password" v-model="formdata.password">></md-input>
                     </md-field>
                 
-                    <button class="register-button hvr-forward">Sign Up</button>
-                    <router-link tag="a" to="/login" class="another">Login</router-link>
+                    <button class="register-button hvr-forward">{{$t('auth.titlereg')}}</button>
+                    <router-link tag="a" to="/login" class="another">{{$t('auth.login')}}</router-link>
                 </form>
             </div>
         </div>

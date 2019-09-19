@@ -7,24 +7,24 @@
 
         <section class="container">
             <div class="editProfile">
-                <h1>Edit profile</h1>
+                <h1>{{$t('auth.editSet')}}</h1>
 
                 <div class="box fadeInDownBig">
                     <form @submit.prevent="register()">
                         <md-field>
-                            <label>First Name</label>
+                            <label>{{$t('auth.fName')}}</label>
                             <md-input type="text" v-model="formdata.first_name"></md-input>
                         </md-field>
                         <md-field>
-                            <label>Last Name</label>
+                            <label>{{$t('auth.lName')}}</label>
                             <md-input type="text" v-model="formdata.last_name"></md-input>
                         </md-field>
                         <md-field>
-                            <label>Username</label>
+                            <label>{{$t('auth.username')}}</label>
                             <md-input type="text" v-model="formdata.username"></md-input>
                         </md-field>
                         <md-field>
-                            <label for="font">Language</label>
+                            <label for="font">{{$t('auth.lang')}}</label>
                             <md-select name="font" id="font" type="text" v-model="formdata.language">
                                 <md-option value="fr">Français</md-option>
                                 <md-option value="en">English</md-option>
@@ -35,11 +35,11 @@
                             <md-input type="email" v-model="formdata.email"></md-input>
                         </md-field>
                         <md-field>
-                            <label>Password</label>
+                            <label>{{$t('auth.pass')}}</label>
                             <md-input type="password" v-model="formdata.password">></md-input>
                         </md-field>
                     
-                        <button class="settings-button hvr-forward">Edit Settings</button>
+                        <button class="settings-button hvr-forward">{{$t('auth.editSet')}}</button>
                     </form>
                 </div>
                 
@@ -52,6 +52,7 @@
 
 <script>
 import compNav from  '../components/Nav'
+import i18n from '../i18n'
 
 export default {
     data () {
@@ -82,8 +83,12 @@ export default {
                 language: this.formdata.language,
                 email: this.formdata.email,
                 password: this.formdata.password,
-                
             }
+            //Changement de langue
+            this.$i18n.locale = data.language;
+            this.$router.push({
+                params: { lang: data.language }
+            })
             console.log(data);
             // AXIOS BDD
             // try {

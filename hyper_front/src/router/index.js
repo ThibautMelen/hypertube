@@ -1,6 +1,7 @@
 // Dependency
 import Vue from 'vue'
 import Router from 'vue-router'
+import i18n from '../i18n'
 
 // AUTH VIEW
 import LoginComp from '../views/Login.vue';
@@ -23,56 +24,69 @@ export default new Router({
   mode: 'history',
   props: ['userInfos'],
   routes: [
-    
-    // AUTH VIEWS
-    {
-      path: '/login',
-      name: 'LoginComp',
-      component: LoginComp,
-    },
-    {
-      path: '/register',
-      name: 'RegisterComp',
-      component: RegisterComp,
-    },
-    {
-      path: '/reset1',
-      name: 'Reset1Comp',
-      component: Reset1Comp,
-    },
-    {
-      path: '/reset2',
-      name: 'Reset2Comp',
-      component: Reset2Comp,
-    },
-
-    //MAIN VIEWS
     {
       path: '/',
-      name: 'HomeComp',
-      component: HomeComp
+      redirect: `/${i18n.locale}`
     },
     {
-      path: '/player/:id',
-      name: 'PlayerComp',
-      component: PlayerComp
-    },
-    {
-      path: '/profile/:id',
-      name: 'ProfileComp',
-      component: ProfileComp
-    },
-    {
-      path: '/settings',
-      name: 'SettingsComp',
-      component: SettingsComp
+      path: '/:lang', 
+      component: {
+        render (c) {return c('router-view')}
+      },
+      children : [
+        // AUTH VIEWS
+        {
+          path: 'login',
+          name: 'LoginComp',
+          component: LoginComp,
+        },
+        {
+          path: 'register',
+          name: 'RegisterComp',
+          component: RegisterComp,
+        },
+        {
+          path: 'reset1',
+          name: 'Reset1Comp',
+          component: Reset1Comp,
+        },
+        {
+          path: 'reset2',
+          name: 'Reset2Comp',
+          component: Reset2Comp,
+        },
+
+        //MAIN VIEWS
+        {
+          path: '/',
+          name: 'HomeComp',
+          component: HomeComp
+        },
+        {
+          path: 'player/:id',
+          name: 'PlayerComp',
+          component: PlayerComp
+        },
+        {
+          path: 'profile/:id',
+          name: 'ProfileComp',
+          component: ProfileComp
+        },
+        {
+          path: 'settings',
+          name: 'SettingsComp',
+          component: SettingsComp
+        },
+        //404 VIEWS
+        {
+          path: "*",
+          name: 'PageNotFound',
+          component: PageNotFound 
+        }
+      ]
     },
 
-    //404 VIEWS
-    {
-      path: "*",
-      name: 'PageNotFound',
-      component: PageNotFound }
+
   ]
 })
 

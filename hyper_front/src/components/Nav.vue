@@ -2,7 +2,7 @@
 
     <nav>
         <!-- LOGO LEFT -->
-        <router-link tag="a" to="/" class="logo hvr-up">
+        <router-link tag="a" :to="`/${$i18n.locale}/`" class="logo hvr-up">
             <img class="bounceInDown" src="../assets/logo/logo_large_cornflux.png" alt="Logo Cornflux">
             <img class="bounceInLeft" src="../assets/logo/logo_min_cornflux.png" alt="Logo Cornflux">
         </router-link>
@@ -16,12 +16,12 @@
                 v-model="selectedEmployee"
                 :md-options="movies"
                 md-layout="box">
-                <label>Search...</label>
+                <label>{{$t('nav.search')}}</label>
             </md-autocomplete>
 
 
             <!-- NOTIF -->
-            <router-link class="notif hvr-up" tag="div" to="/">
+            <router-link class="notif hvr-up" tag="div" to="`/${$i18n.locale}/`">
                 <div v-if="newNotif"></div>
                 <svg viewBox="0 0 480.12 500"><path d="M181.51,431.49a71.37,71.37,0,0,0,51.06,68.15h0a71,71,0,0,0,90.94-68.14v-4h-142Z" transform="translate(-12.44 -2.5)"></path><path d="M488.73,364.77h0a30.89,30.89,0,0,0-1.73-2.65l.25-.23-50.83-50.83V186.45l-.05-6.43h-.09A185.65,185.65,0,0,0,399.67,76.2,183.85,183.85,0,0,0,76.08,134.82,184.07,184.07,0,0,0,68.82,180h-.23v131L20.67,359l-2.89,2.92.24.22a30.89,30.89,0,0,0-1.73,2.65A28.64,28.64,0,0,0,37,407.44v.29H468v-.28a28.64,28.64,0,0,0,20.73-42.67Z" transform="translate(-12.44 -2.5)"></path></svg>
             </router-link>
@@ -30,10 +30,10 @@
             <div class="account">
                 <img v-bind:src="`${userInfos.avatar}`" alt="avatar" class="hvr-up-min">
                 <ul>
-                    <router-link tag="a" to="/profile/1"><li>Profile</li></router-link>
-                    <router-link tag="a" to="/settings"><li>Settings</li></router-link>
+                    <router-link tag="a" :to="`/${$i18n.locale}/profile/1`"><li>{{$t('nav.profile')}}</li></router-link>
+                    <router-link tag="a" :to="`/${$i18n.locale}/settings`"><li>{{$t('nav.settings')}}</li></router-link>
 
-                    <a @click="logout()"><li>log out</li></a>
+                    <a @click="logout()"><li>{{$t('nav.logout')}}</li></a>
                 </ul>
             </div>
 
@@ -41,11 +41,11 @@
 
         <!-- AUTH RIGHT -->
         <div v-else class="auth">
-            <router-link tag="a" to="/login" class="logo">
-                <button class="hvr-up-min">login</button>
+            <router-link tag="a" :to="`/${$i18n.locale}/login`" class="logo">
+                <button class="hvr-up-min">{{$t('auth.title')}}</button>
             </router-link>
-            <router-link tag="a" to="/register" class="logo">
-                <button class="hvr-up-min">register</button>
+            <router-link tag="a" :to="`/${$i18n.locale}/register`" class="logo">
+                <button class="hvr-up-min">{{$t('auth.titlereg')}}</button>
             </router-link>
         </div>
 
@@ -56,10 +56,12 @@
 
 
 <script>
+import i18n from '../i18n'
 
 export default {
     data () {
         return {
+            lang : "lol",
             online: true,
             userInfos: {
                 avatar: `https://s3.eu-west-3.amazonaws.com/pikomit/users/5d65017a357f9252bb73cd7a/zuc02XS4fqstLtESOZGAiVEgl6MjpF1566900850741_400px.jpg`

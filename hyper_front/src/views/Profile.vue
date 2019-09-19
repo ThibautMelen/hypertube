@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            <comp-catalog title="Last Show View 👀" v-if="true"/>
+            <comp-catalog :title="$t('home.last')" v-if="true"/>
 
             <div class="last_show">
 

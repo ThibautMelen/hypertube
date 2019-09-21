@@ -6,7 +6,6 @@ import axios from 'axios'
 
 //store
 import store from '../store'
-import i18n from '../i18n'
 
 // AUTH VIEW
 import LoginComp from '../views/Login.vue';
@@ -29,68 +28,58 @@ const router = new Router({
   mode: 'history',
   props: ['userInfos'],
   routes: [
+    
+    // AUTH VIEWS
+    {
+      path: '/login',
+      name: 'LoginComp',
+      component: LoginComp
+    },
+    {
+      path: '/register',
+      name: 'RegisterComp',
+      component: RegisterComp,
+      tet: 42
+    },
+    {
+      path: '/reset1',
+      name: 'Reset1Comp',
+      component: Reset1Comp,
+    },
+    {
+      path: '/reset2',
+      name: 'Reset2Comp',
+      component: Reset2Comp,
+    },
+
+    //MAIN VIEWS
     {
       path: '/',
-      redirect: `/${i18n.locale}`
+      name: 'HomeComp',
+      component: HomeComp
     },
     {
-      path: '/:lang', 
-      component: {
-        render (c) {return c('router-view')}
-      },
-      children : [
-        // AUTH VIEWS
-        {
-          path: 'login',
-          name: 'LoginComp',
-          component: LoginComp,
-        },
-        {
-          path: 'register',
-          name: 'RegisterComp',
-          component: RegisterComp,
-        },
-        {
-          path: 'reset1',
-          name: 'Reset1Comp',
-          component: Reset1Comp,
-        },
-        {
-          path: 'reset2',
-          name: 'Reset2Comp',
-          component: Reset2Comp,
-        },
-
-        //MAIN VIEWS
-        {
-          path: '/',
-          name: 'HomeComp',
-          component: HomeComp
-        },
-        {
-          path: 'player/:id',
-          name: 'PlayerComp',
-          component: PlayerComp
-        },
-        {
-          path: 'profile/:id',
-          name: 'ProfileComp',
-          component: ProfileComp
-        },
-        {
-          path: 'settings',
-          name: 'SettingsComp',
-          component: SettingsComp
-        },
-        //404 VIEWS
-        {
-          path: "*",
-          name: 'PageNotFound',
-          component: PageNotFound 
-        }
-      ]
+      path: '/player/:id',
+      name: 'PlayerComp',
+      component: PlayerComp
+    },
+    {
+      path: '/profile/:id',
+      name: 'ProfileComp',
+      component: ProfileComp
+    },
+    {
+      path: '/settings',
+      name: 'SettingsComp',
+      component: SettingsComp
     },
 
+    //404 VIEWS
+    {
+      path: "*",
+      name: 'PageNotFound',
+      component: PageNotFound
+    }
   ]
 })
 
@@ -129,15 +118,6 @@ router.beforeEach(async (to, from, next) => {
       store.commit('SET_LOADING', false)
     }
   }
-
-    let language = to.params.lang;
-    if (!language) {
-      language = 'en'
-    } 
-
-    // set the current language for i18n.
-    i18n.locale = language
-    next()
 
   if (!store.state.user && loggedRoutes.includes(to.name)) {
     next('/login')

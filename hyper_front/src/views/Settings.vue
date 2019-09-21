@@ -7,24 +7,24 @@
 
         <section class="container">
             <div class="editProfile">
-                <h1>{{$t('auth.editSet')}}</h1>
+                <h1>Edit profile</h1>
 
                 <div class="box fadeInDownBig">
                     <form @submit.prevent="update()">
                         <md-field>
-                            <label>{{$t('auth.fName')}}</label>
+                            <label>First Name</label>
                             <md-input type="text" v-model="formdata.firstName"></md-input>
                         </md-field>
                         <md-field>
-                            <label>{{$t('auth.lName')}}</label>
+                            <label>Last Name</label>
                             <md-input type="text" v-model="formdata.lastName"></md-input>
                         </md-field>
                         <md-field>
-                            <label>{{$t('auth.username')}}</label>
+                            <label>Username</label>
                             <md-input type="text" v-model="formdata.username"></md-input>
                         </md-field>
                         <md-field>
-                            <label for="font">{{$t('auth.lang')}}</label>
+                            <label for="font">Language</label>
                             <md-select name="font" id="font" type="text" v-model="formdata.language">
                                 <md-option value="french">Français</md-option>
                                 <md-option value="english">English</md-option>
@@ -35,11 +35,11 @@
                             <md-input type="email" v-model="formdata.email"></md-input>
                         </md-field>
                         <md-field>
-                            <label>{{$t('auth.pass')}}</label>
+                            <label>Password</label>
                             <md-input type="password" v-model="formdata.password">></md-input>
                         </md-field>
                     
-                        <button class="settings-button hvr-forward">{{$t('auth.editSet')}}</button>
+                        <button class="settings-button hvr-forward">Edit Settings</button>
                     </form>
                 </div>
                 
@@ -54,7 +54,6 @@
 import compNav from  '../components/Nav'
 import axios from 'axios'
 import {getErrorMessage} from '../helpers'
-import i18n from '../i18n'
 
 export default {
     data () {
@@ -86,11 +85,6 @@ export default {
                 password: this.formdata.password
             }
             console.log(data)
-
-            // this.$i18n.locale = data.language;
-            // this.$router.push({
-            //     params: { lang: data.language }
-            // })
 
             try {
                 const res = await axios.patch('http://localhost:3000/users/update', data, {withCredentials: true});

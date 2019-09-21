@@ -13,22 +13,22 @@
         <!-- BOX -->
         <div class="box-container">
             <div class="box flipInY">
-                <h2>{{$t('auth.titlereg')}}</h2>
+                <h2>Sign up</h2>
                 <form @submit.prevent="register()">
                     <md-field>
-                        <label>{{$t('auth.fName')}}</label>
-                        <md-input type="text" v-model="formdata.first_name"></md-input>
+                        <label>First Name</label>
+                        <md-input type="text" v-model="formdata.firstName"></md-input>
                     </md-field>
                     <md-field>
-                        <label>{{$t('auth.lName')}}</label>
-                        <md-input type="text" v-model="formdata.last_name"></md-input>
+                        <label>Last Name</label>
+                        <md-input type="text" v-model="formdata.lastName"></md-input>
                     </md-field>
                     <md-field>
-                        <label>{{$t('auth.username')}}</label>
+                        <label>Username</label>
                         <md-input type="text" v-model="formdata.username"></md-input>
                     </md-field>
                     <md-field>
-                        <label for="font">{{$t('auth.lang')}}</label>
+                        <label for="font">Language</label>
                         <md-select name="font" id="font" type="text" v-model="formdata.language">
                             <md-option value="french">Français</md-option>
                             <md-option value="english">English</md-option>
@@ -39,12 +39,12 @@
                         <md-input type="email" v-model="formdata.email"></md-input>
                     </md-field>
                     <md-field>
-                        <label>{{$t('auth.pass')}}</label>
+                        <label>Password</label>
                         <md-input type="password" v-model="formdata.password">></md-input>
                     </md-field>
                 
-                    <button class="register-button hvr-forward">{{$t('auth.titlereg')}}</button>
-                    <router-link tag="a" to="/login" class="another">{{$t('auth.login')}}</router-link>
+                    <button class="register-button hvr-forward">Sign Up</button>
+                    <router-link tag="a" to="/login" class="another">Login</router-link>
                 </form>
             </div>
         </div>

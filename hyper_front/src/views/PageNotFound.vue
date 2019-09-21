@@ -302,6 +302,13 @@
             <use xlink:href="#Letter4" x="0" y="0"/>
             <use xlink:href="#Letter4" x="500" y="0"/>
         </svg>
+
+        <a class="bl_404__link" href="/"> Return home </a>
+        <div class="aboutMe">
+        <a href="https://codepen.io/BlackStar1991/pens/public/" target="_new">
+            <div class="fa fa-codepen"> my other Pens </div>
+        </a>
+        </div>
         </div>
 
     </section>

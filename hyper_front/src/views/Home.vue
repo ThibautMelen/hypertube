@@ -43,16 +43,15 @@
         </header>
 
         <comp-catalog
-            :title="!searchQuery ? $t('home.title') : `Search result 🔍`"
+            :title="!searchQuery ? `The Most Popular 🍿` : `Search result 🔍`"
             :catalog="!searchQuery ? popularCatalog : searchCatalog"
             :loading="(!popularCatalog || popularCatalog.length < 1|| searchQuery) && searchLoading" />
+
 
     </section>
 </template>
 
 <script>
-import i18n from '../i18n'
-
 import compNav from  '../components/Nav'
 import compCatalog from  '../components/Catalog'
 import axios from 'axios'

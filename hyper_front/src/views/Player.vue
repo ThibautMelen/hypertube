@@ -2,10 +2,16 @@
     <section class="player">
 
         <header>
-            <comp-nav v-if="true"/>
+            <comp-nav />
         </header>
 
-        <section class="video">
+        <section v-if="loading || !movie" class="video">
+            <div v-if="loading" class="spinner-container">
+                <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
+            </div>
+            <h2 v-else>This content was not found 😬</h2>
+        </section>
+        <section v-else class="video">
 
             <section class="videoPlayer">
                 <!-- video element -->
@@ -19,14 +25,14 @@
 
             <aside class="infoMovie">
                 <h1>{{ this.movie.title}}</h1>
-                <h2 class="eggs">{{ this.movie.date}} - {{ this.movie.time}}</h2>
+                <h2 class="eggs">{{ this.movie.year}} - {{ parseFloat(this.movie.runtime / 60).toFixed(2) }}h</h2>
                 <div class="watched hvr-up-min">
                     <button @click="watched($event)" class="hvr-rectangle-in"> Watched ?</button>
                 </div>
 
                 <div class="imbd">
                     <img class="hvr-up-min" src="../assets/logo/imbd.png" alt="">
-                    <h3 class="hvr-up-min">{{ this.movie.imbd}}</h3>
+                    <h3 class="hvr-up-min">{{ this.movie.rating}}</h3>
                 </div>
                 
                 <ul>
@@ -36,7 +42,7 @@
                 <vue-plyr class="trailer">
                     <div class="plyr__video-embed">
                         <iframe
-                        :src="`https://www.youtube.com/watch?v=${this.movie.yt_trailer}`"
+                        :src="`https://www.youtube.com/watch?v=${this.movie.yt_trailer_code}`"
                         allowfullscreen allowtransparency allow="autoplay">
                         </iframe>
                     </div>
@@ -44,14 +50,14 @@
 
                 <div class="dcpt">
                     <h2>Synopsis</h2>
-                    <p>{{ this.movie.dcpt}}</p>
+                    <p>{{ this.movie.description_full }}</p>
                 </div>
 
 
                 <div class="cast">
                     <h2>Director</h2>
                     <ul>
-                        <li class="hvr-up-min" v-for="(item, index) in this.movie.director" :key="index">
+                        <li class="hvr-up-min" v-for="(item, index) in this.oldMovie.director" :key="index">
                             <img :src="item.url_small_image" alt="">
                             <div>
                                 <p>{{ item.name }}</p>
@@ -63,7 +69,7 @@
                 <div class="cast">
                     <h2>Casting</h2>
                     <ul>
-                        <li class="hvr-up-min" v-for="(item, index) in this.movie.cast" :key="index">
+                        <li class="hvr-up-min" v-for="(item, index) in this.oldMovie.cast" :key="index">
                             <img :src="item.url_small_image" alt="">
                             <div>
                                 <p>{{ item.name }} <i>play</i></p>
@@ -84,7 +90,7 @@
 
                     <div class="comList">
                         <ul>
-                            <li class="hvr-up-min" v-for="(item, index) in this.movie.coms" :key="index">
+                            <li class="hvr-up-min" v-for="(item, index) in this.oldMovie.coms" :key="index">
                                 <img :src="item.url_small_image" alt="">
                                 <div>
                                     <p>{{ item.name }}</p>
@@ -109,13 +115,13 @@
 
 <script>
 import compNav from  '../components/Nav'
+import axios from 'axios'
+import WebTorrent from 'webtorrent'
 
 export default {
     data () {
         return {
-            hello: `hey what's up`,
-            searching: false,
-            movie: {
+            oldMovie: {
                 title: "Jurassic Park",
                 date: "1993",
                 time: "2h",
@@ -165,6 +171,8 @@ export default {
                     }
                 ],
             },
+            movie: null,
+            loading: true
         }
     },
     components: {
@@ -183,12 +191,53 @@ export default {
             // console.log(targetId); // returns 'foo'
             // this
 
+        },
+        async getVideo (id) {
+            try {
+                const res = await axios.get(`http://localhost:3000/shows/play/${id}`, {withCredentials: true});
+                console.log(res.data);
+                console.log(res.status);
+
+                if (res.data.success) {
+                    this.movie = res.data.movie
+                }
+                this.loading = false
+            } catch (ex) {
+                console.log(ex)
+                this.loading = false
+            }
         }
 
     },
     created() {
     },
     mounted (){
+        if (this.$route.params.id) {
+            this.getVideo(this.$route.params.id)
+        }
+        else {
+            this.$router.push('/')
+        }
+
+        var client = new WebTorrent()
+        var magnetURI = `magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent`
+
+        client.on('error', function (err) {
+            console.error('ERROR: ' + err.message)
+        })
+        
+        client.add(magnetURI, function (torrent) {
+        // Got torrent metadata!
+        console.log('yooooo')
+        console.log('Client is downloading:', torrent.infoHash)
+        
+        torrent.files.forEach(function (file) {
+            // Display the file by appending it to the DOM. Supports video, audio, images, and
+            // more. Specify a container element (CSS selector or reference to DOM node).
+            console.log(file)
+            file.appendTo('body')
+        })
+        })
     }
 }
 
@@ -215,6 +264,19 @@ section.player {
         align-items: stretch;
         // background-color: #fff;
         padding: 90px 4% 20px 4%;
+
+        h2 {
+            color: $white;
+            font-size: 20px;
+            margin: 15px 0px 35px 0px;
+            text-align: center;
+        }
+
+        div.spinner-container {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
         section.videoPlayer  {
             display: flex;

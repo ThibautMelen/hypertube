@@ -1,8 +1,7 @@
 <template>
   <div id="app">
 
-    <!-- <comp-header v-if="true"/> -->
-    <router-view v-if="true"/>
+    <router-view v-if="!this.$store.state.loading" />
 
   </div>
 </template>

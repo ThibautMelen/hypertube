@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
+const auth = require('../../middlewares/auth')
 
 const methods = require('./methods')
-// const auth = require('../../middlewares/auth')
 
 /*     Handles requests from /users      */
 /*  Router for all users related methods  */
@@ -18,5 +18,11 @@ router.route('/verify')
 
 router.route('/test')
 .get(methods.test)
+
+router.route('/:id')
+.get(auth, methods.getUser)
+
+router.route('/update')
+.patch(auth, methods.update)
 
 module.exports = router

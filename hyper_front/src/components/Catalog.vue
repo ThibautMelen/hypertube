@@ -3,11 +3,15 @@
     <section class="catalog">
         <h1>{{title}}</h1>
 
+        <div v-if="loading" class="spinner-container">
+            <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
+        </div>
         <div class="listMovies">
-            <router-link tag="div" to="/" v-for="(item, index) in catalog" :key="index">
-                <div class="hvr-up-min infoMovie" :style="{'background-image':`url(${item.cover})`}">
+            <h2 v-if="!loading && (!catalog || catalog.length < 1)">No results matching your query 😔</h2>
+            <router-link tag="div" :to="`/player/${item.id}`" v-for="(item, index) in catalog" :key="index">
+                <div class="hvr-up-min infoMovie" :style="{'background-image':`url(${item.image})`}">
                     <p>{{ item.title }}</p>
-                    <p>{{ item.date }} ● {{ item.time }} ● {{ item.imbd }} ⭐️</p>
+                    <p>{{ item.year }} ● {{ parseFloat(item.runtime / 60).toFixed(2) }}h ● {{ item.rating }} ⭐️</p>
                     <p></p>
                 </div>
             </router-link>
@@ -22,98 +26,9 @@
 <script>
 
 export default {
-    props: ['title'],
+    props: ['title', 'catalog', 'loading'],
     data () {
         return {
-            
-            catalog: [
-                {
-                    title: "16 Blocks",
-                    date: "1993",
-                    time: "2h",
-                    imbd: "8.1",
-                    cover: "https://img.yts.lt/assets/images/movies/16_Blocks_2006/large-cover.jpg"
-                },
-                {
-                    title: "Avengers: Endgame",
-                    date: "1993",
-                    time: "2h",
-                    imbd: "8.1",
-                    cover: "https://img.yts.lt/assets/images/movies/avengers_endgame_2019/large-cover.jpg"
-                },
-                {
-                    title: "Jurassic Park",
-                    date: "1993",
-                    time: "2h",
-                    imbd: "8.1",
-                    cover: "https://img.yts.lt/assets/images/movies/jurassic_park_1993/large-cover.jpg",
-                    screen: "https://img.yts.lt/assets/images/movies/Jurassic_Park_1993/large-screenshot1.jpg"
-                },
-                {
-                    title: "Catch Me If You Can",
-                    date: "1993",
-                    time: "2h",
-                    imbd: "8.1",
-                    cover: "https://img.yts.lt/assets/images/movies/catch_me_if_you_can_2002/large-cover.jpg"
-                },
-                {
-                    title: "Kill Bill: Vol. 1",
-                    date: "1993",
-                    time: "2h",
-                    imbd: "8.1",
-                    cover: "https://img.yts.lt/assets/images/movies/kill_bill_vol_1_2003/large-cover.jpg"
-                },
-                {
-                    title: "Inglourious Basterds",
-                    date: "1993",
-                    time: "2h",
-                    imbd: "8.1",
-                    cover: "https://img.yts.lt/assets/images/movies/Inglourious_Basterds_2009/large-cover.jpg"
-                },
-                {
-                    title: "16 Blocks",
-                    date: "1993",
-                    time: "2h",
-                    imbd: "8.1",
-                    cover: "https://img.yts.lt/assets/images/movies/16_Blocks_2006/large-cover.jpg"
-                },
-                {
-                    title: "Avengers: Endgame",
-                    date: "1993",
-                    time: "2h",
-                    imbd: "8.1",
-                    cover: "https://img.yts.lt/assets/images/movies/avengers_endgame_2019/large-cover.jpg"
-                },
-                {
-                    title: "Jurassic Park",
-                    date: "1993",
-                    time: "2h",
-                    imbd: "8.1",
-                    cover: "https://img.yts.lt/assets/images/movies/jurassic_park_1993/large-cover.jpg",
-                    screen: "https://img.yts.lt/assets/images/movies/Jurassic_Park_1993/large-screenshot1.jpg"
-                },
-                {
-                    title: "Catch Me If You Can",
-                    date: "1993",
-                    time: "2h",
-                    imbd: "8.1",
-                    cover: "https://img.yts.lt/assets/images/movies/catch_me_if_you_can_2002/large-cover.jpg"
-                },
-                {
-                    title: "Kill Bill: Vol. 1",
-                    date: "1993",
-                    time: "2h",
-                    imbd: "8.1",
-                    cover: "https://img.yts.lt/assets/images/movies/kill_bill_vol_1_2003/large-cover.jpg"
-                },
-                {
-                    title: "Inglourious Basterds",
-                    date: "1993",
-                    time: "2h",
-                    imbd: "8.1",
-                    cover: "https://img.yts.lt/assets/images/movies/Inglourious_Basterds_2009/large-cover.jpg"
-                },
-            ],
         }
     },
     components: {
@@ -121,10 +36,6 @@ export default {
     computed: {
     },
     methods:{
-        //LOGOUT
-        async logout() {
-            await console.log(`LOG OUT`);
-        }
     },
     created() {
     },
@@ -152,12 +63,27 @@ section.catalog {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    padding-top: 80px;
     // padding: 15px 4%;
 
     h1 {
         color: $white;
         font-size: 24px;
         margin: 15px 0px 35px 0px;
+        text-align: center;
+    }
+
+    h2 {
+        color: $white;
+        font-size: 20px;
+        margin: 15px 0px 35px 0px;
+        text-align: center;
+    }
+
+    div.spinner-container {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 30px;
     }
 
     div.listMovies {

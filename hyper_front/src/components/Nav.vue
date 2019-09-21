@@ -8,13 +8,14 @@
         </router-link>
 
         <!-- INFO USER -->
-        <div v-if="online" class="info">
+        <div v-if="$store.state.user" class="info">
 
             <!-- SEARCH -->
             <md-autocomplete
+                v-if="showSearch"
                 class="search"
-                v-model="selectedEmployee"
-                :md-options="movies"
+                v-model="searchQuery"
+                :md-options="[]"
                 md-layout="box">
                 <label>Search...</label>
             </md-autocomplete>
@@ -30,7 +31,7 @@
             <div class="account">
                 <img v-bind:src="`${userInfos.avatar}`" alt="avatar" class="hvr-up-min">
                 <ul>
-                    <router-link tag="a" to="/profile/1"><li>Profile</li></router-link>
+                    <router-link tag="a" :to="`/profile/${this.$store.state.user._id}`"><li>Profile</li></router-link>
                     <router-link tag="a" to="/settings"><li>Settings</li></router-link>
 
                     <a @click="logout()"><li>log out</li></a>
@@ -58,31 +59,18 @@
 <script>
 
 export default {
+    props: ['value', 'showSearch'],
     data () {
         return {
-            online: true,
+            searchQuery: '',
             userInfos: {
                 avatar: `https://s3.eu-west-3.amazonaws.com/pikomit/users/5d65017a357f9252bb73cd7a/zuc02XS4fqstLtESOZGAiVEgl6MjpF1566900850741_400px.jpg`
             },
             newNotif: false,
-            selectedEmployee: null,
-            movies: [
-                'Avengers: Endgame ',
-                'Spider-Man: Far From Home',
-                'Toy Story 4',
-                'Incredibles 2',
-                'Once Upon a Time In Hollywood',
-                'Inglourious Basterds',
-                'Django Unchained',
-                'Fury',
-                'The Last: Naruto the Movie',
-                'OSS 117',
-                'Breaking Badel camino',
-                'El Camino',
-                'Shutter Island',
-                'The Wolf of Wall Street'
-            ]
         }
+    },
+    watch: {
+        searchQuery: function (value) { this.$emit('onSearch', value) }
     },
     components: {
     },
@@ -91,7 +79,9 @@ export default {
     methods:{
         //LOGOUT
         async logout() {
-            await console.log(`LOG OUT`);
+            this.$cookies.remove('user_token')
+            this.$store.commit('SET_USER', null)
+            this.$router.push('/login')
         }
     },
     created() {

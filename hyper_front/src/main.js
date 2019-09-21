@@ -3,18 +3,19 @@ import App from './App.vue'
 import router from './router'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
-import VueCarousel from 'vue-carousel';
-
-// In your main vue file - the one where you create the initial vue instance.
+import VueCarousel from 'vue-carousel'
+import VueCookies from 'vue-cookies'
+import store from './store'
 import VuePlyr from 'vue-plyr'
 
 Vue.use(VuePlyr)
-
+Vue.use(VueCookies)
 Vue.use(VueMaterial)
-Vue.use(VueCarousel);
+Vue.use(VueCarousel)
 
 new Vue({
   el: '#app',
+  store,
   router,
   components: {
     App

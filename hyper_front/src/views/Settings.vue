@@ -10,14 +10,14 @@
                 <h1>Edit profile</h1>
 
                 <div class="box fadeInDownBig">
-                    <form @submit.prevent="register()">
+                    <form @submit.prevent="update()">
                         <md-field>
                             <label>First Name</label>
-                            <md-input type="text" v-model="formdata.first_name"></md-input>
+                            <md-input type="text" v-model="formdata.firstName"></md-input>
                         </md-field>
                         <md-field>
                             <label>Last Name</label>
-                            <md-input type="text" v-model="formdata.last_name"></md-input>
+                            <md-input type="text" v-model="formdata.lastName"></md-input>
                         </md-field>
                         <md-field>
                             <label>Username</label>
@@ -26,8 +26,8 @@
                         <md-field>
                             <label for="font">Language</label>
                             <md-select name="font" id="font" type="text" v-model="formdata.language">
-                                <md-option value="fr">Français</md-option>
-                                <md-option value="en">English</md-option>
+                                <md-option value="french">Français</md-option>
+                                <md-option value="english">English</md-option>
                             </md-select>
                         </md-field>
                         <md-field>
@@ -52,18 +52,20 @@
 
 <script>
 import compNav from  '../components/Nav'
+import axios from 'axios'
+import {getErrorMessage} from '../helpers'
 
 export default {
     data () {
+        console.log(this.$store.state.user)
         return {
-            //INPUT INFOS
-            formdata:{
-                first_name:'',
-                last_name:'',
-                username:'',
-                language:'',
-                email:'',
-                password:''
+            formdata: {
+                firstName: this.$store.state.user.firstName,
+                lastName: this.$store.state.user.lastName,
+                username: this.$store.state.user.username,
+                language: this.$store.state.user.language,
+                email: this.$store.state.user.email,
+                password: ''
             }
         }
     },
@@ -73,35 +75,36 @@ export default {
     computed: {
     },
     methods:{
-        //REGISTER FORM
-        async register () {
+        async update () {
             let data = {
-                first_name: this.formdata.first_name,
-                last_name: this.formdata.last_name,
+                firstName: this.formdata.firstName,
+                lastName: this.formdata.lastName,
                 username: this.formdata.username,
                 language: this.formdata.language,
                 email: this.formdata.email,
-                password: this.formdata.password,
-                
+                password: this.formdata.password
             }
-            console.log(data);
-            // AXIOS BDD
-            // try {
-            //     const res = await this.$api.post('/auth/register', data);
-            //     console.log(res.data);
-            //     console.log(res.status);
-            //     //Gestion des erreurs 203
-            //     if(res.data.error == "validation_error")
-            //         alert(res.data.message);
-            //     else if(res.data.error == "user_already_use")
-            //         alert(res.data.message);
-            //     else if(res.data.error == "email_already_use")
-            //         alert(res.data.message);
-            //     else if(res.data.success == "OK")
-            //         this.$router.push('/login');
-            // } catch (ex) {
-            //     console.log(ex);
-            // }
+            console.log(data)
+
+            try {
+                const res = await axios.patch('http://localhost:3000/users/update', data, {withCredentials: true});
+                console.log(res.data)
+
+                if (res.data.success) {
+                    alert('Infos successfully updated !')
+                    this.formdata.password = ''
+
+                    if (res.data.updatedUser) {
+                        console.log(res.data.updatedUser)
+                        this.$store.commit('SET_USER', res.data.updatedUser)
+                    }
+                }
+                else {
+                    alert(getErrorMessage(res.data.error))
+                }
+            } catch (ex) {
+                console.log(ex)
+            }
         }
     },
     created() {

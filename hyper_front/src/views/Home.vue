@@ -2,9 +2,9 @@
     <section class="home">
 
         <header>
-            <comp-nav v-if="true"/>
+            <comp-nav :showSearch="true" @onSearch="onSearch" />
 
-            <div class="slider" v-if="!searching">
+            <div class="slider" v-if="!searchQuery">
                 <!-- SHOW LARGE SRCEEN -->
                 <hide-at breakpoint="mediumAndBelow">
                     <carousel class="slide"
@@ -15,9 +15,9 @@
                     :autoplay="true"
                     :autoplay-timeout="3000"
                     >
-                        <slide v-for="(slide,index) in slides" :key="index">
-                            <div class="slider_bck hvr-up-min" :style="{'background-image':`url(${slide.bck})`}">
-                            </div>
+                        <slide v-for="(show, index) in popularCatalog" :key="index">
+                            <router-link tag="div" :to="`/player/${show.id}`" class="slider_bck hvr-up-min" :style="{'background-image':`url(${show.image})`}">
+                            </router-link>
                         </slide>
                     </carousel>
                 </hide-at>
@@ -32,9 +32,9 @@
                     :autoplay="true"
                     :autoplay-timeout="3000"
                     >
-                        <slide v-for="(slide,index) in slides" :key="index">
-                            <div class="slider_bck hvr-up-min" :style="{'background-image':`url(${slide.bck})`}">
-                            </div>
+                        <slide v-for="(show, index) in popularCatalog" :key="index">
+                            <router-link tag="div" :to="`/player/${show.id}`" class="slider_bck hvr-up-min" :style="{'background-image':`url(${show.image})`}">
+                            </router-link>
                         </slide>
                     </carousel>
                 </show-at>
@@ -42,7 +42,10 @@
 
         </header>
 
-        <comp-catalog title="The Most Popular 🍿" v-if="true"/>
+        <comp-catalog
+            :title="!searchQuery ? `The Most Popular 🍿` : `Search result 🔍`"
+            :catalog="!searchQuery ? popularCatalog : searchCatalog"
+            :loading="(!popularCatalog || popularCatalog.length < 1|| searchQuery) && searchLoading" />
 
 
     </section>
@@ -51,49 +54,19 @@
 <script>
 import compNav from  '../components/Nav'
 import compCatalog from  '../components/Catalog'
+import axios from 'axios'
 
 import {showAt, hideAt} from 'vue-breakpoints'
 import { Carousel, Slide } from 'vue-carousel';
 
-import Slide1 from '../assets/slider/slide_1.jpg'
-import Slide2 from '../assets/slider/slide_2.jpg'
-import Slide3 from '../assets/slider/slide_3.jpg'
-import Slide4 from '../assets/slider/slide_4.jpg'
-import Slide5 from '../assets/slider/slide_4.jpg'
-import Slide6 from '../assets/slider/slide_4.jpg'
-import Slide7 from '../assets/slider/slide_4.jpg'
-import Slide8 from '../assets/slider/slide_4.jpg'
-import Slide9 from '../assets/slider/slide_4.jpg'
-import Slide10 from '../assets/slider/slide_4.jpg'
-import Slide11 from '../assets/slider/slide_4.jpg'
-import Slide12 from '../assets/slider/slide_4.jpg'
-import Slide13 from '../assets/slider/slide_4.jpg'
-import Slide14 from '../assets/slider/slide_4.jpg'
-import Slide15 from '../assets/slider/slide_4.jpg'
-
-
 export default {
     data () {
         return {
-            hello: `hey what's up`,
-            searching: false,
-            slides:[
-                { bck: Slide1 },
-                { bck: Slide2 },
-                { bck: Slide3 },
-                { bck: Slide4 },
-                { bck: Slide5 },
-                { bck: Slide6 },
-                { bck: Slide7 },
-                { bck: Slide8 },
-                { bck: Slide9 },
-                { bck: Slide10 },
-                { bck: Slide11 },
-                { bck: Slide12 },
-                { bck: Slide13 },
-                { bck: Slide14 },
-                { bck: Slide15 },
-            ]
+            searchQuery: '',
+            searchDelayTimer: null,
+            popularCatalog: [],
+            searchCatalog: [],
+            searchLoading: true
         }
     },
     components: {
@@ -107,10 +80,57 @@ export default {
     computed: {
     },
     methods:{
+        onSearch (searchQuery) {
+            this.searchQuery = searchQuery
+            if (searchQuery) {
+                this.searchLoading = true
+            }
+            clearTimeout(this.delayTimer)
+            this.delayTimer = setTimeout(async () => {
+                try {
+                    if (this.searchQuery) {
+                        const res = await axios.get(`http://localhost:3000/shows/search/${this.searchQuery}`, {withCredentials: true});
+                        console.log(res.data)
+                        console.log(res.status)
+
+                        if (res.data.success) {
+                            this.searchCatalog = res.data.movies
+                        }
+                        else {
+                            this.searchCatalog = []
+                        }
+                    }
+                    else {
+                        this.searchCatalog = []
+                    }
+
+                    this.searchLoading = false
+                } catch (ex) {
+                    console.log(ex)
+                    this.searchLoading = false
+                }
+            }, 600)
+        },
+        async getPopular () {
+            try {
+                const res = await axios.get(`http://localhost:3000/shows/popular`, {withCredentials: true});
+                console.log(res.data);
+                console.log(res.status);
+
+                if (res.data.success) {
+                    this.popularCatalog = res.data.movies
+                }
+                this.searchLoading = false
+            } catch (ex) {
+                console.log(ex)
+                this.searchLoading = false
+            }
+        },
     },
     created() {
     },
     mounted (){
+        this.getPopular()
     }
 }
 

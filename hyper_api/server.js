@@ -7,6 +7,7 @@ const helmet = require('helmet')
 const logger = require('./middlewares/logger')
 
 const users = require('./routers/users/routes')
+const shows = require('./routers/shows/routes')
 
 if (process.env.JWT_SECRET === undefined || process.env.PORT === undefined) {
     console.error('Error: Required environment variables not supplied.')
@@ -66,5 +67,6 @@ app.get('/', (req, res) => {
 
 /* Load API modules */
 app.use('/users', users)
+app.use('/shows', shows)
 
 app.listen(process.env.PORT, () => console.log(`App running on port ${process.env.PORT}.`))

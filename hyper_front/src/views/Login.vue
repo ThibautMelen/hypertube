@@ -35,6 +35,9 @@
 
 <script>
 
+import axios from 'axios'
+import helpers from '../helpers'
+
 export default {
     data () {
         return {
@@ -56,26 +59,24 @@ export default {
                 username: this.formdata.username,    
                 password: this.formdata.password    
             }
-            console.log(data);
-            // try {
-            //     const res = await this.$api.post('/auth/login', {
-            //         username : data.username,
-            //         password : data.password
-            //     });
-                
-            //     if(res.data.success == "OK")
-            //     {
-            //         this.$cookies.set('user_token', res.data.token);
-            //         this.$store.commit('SET_USER', res.data.userInfos);
-            //         this.$store.state.socket.emit('set_sid', res.data.token)
-            //         this.$router.push('/');
-            //     }
-            //     else {
-            //         alert(res.data.message);
-            //     }
-            // } catch (ex) {
-            //     console.log(ex);
-            // }
+            console.log(data)
+
+            try {
+                const res = await axios.post('http://localhost:3000/users/login', data);
+                console.log(res.data);
+                console.log(res.status);
+
+                if (res.data.success) {
+                    this.$cookies.set('user_token', res.data.token)
+                    this.$store.commit('SET_USER', res.data.userInfos)
+                    this.$router.push('/')
+                }
+                else {
+                    alert(helpers.getErrorMessage('loginError'))
+                }
+            } catch (ex) {
+                console.log(ex)
+            }
         },
     },
     created() {

@@ -1,6 +1,11 @@
 // Dependency
 import Vue from 'vue'
 import Router from 'vue-router'
+import VueCookies from 'vue-cookies'
+import axios from 'axios'
+
+//store
+import store from '../store'
 
 // AUTH VIEW
 import LoginComp from '../views/Login.vue';
@@ -19,7 +24,7 @@ import PageNotFound from '../views/PageNotFound.vue';
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   props: ['userInfos'],
   routes: [
@@ -28,12 +33,13 @@ export default new Router({
     {
       path: '/login',
       name: 'LoginComp',
-      component: LoginComp,
+      component: LoginComp
     },
     {
       path: '/register',
       name: 'RegisterComp',
       component: RegisterComp,
+      tet: 42
     },
     {
       path: '/reset1',
@@ -72,8 +78,55 @@ export default new Router({
     {
       path: "*",
       name: 'PageNotFound',
-      component: PageNotFound }
+      component: PageNotFound
+    }
   ]
 })
 
+const loggedRoutes = ['HomeComp', 'PlayerComp', 'ProfileComp', 'SettingsComp']
 
+const unloggedRoutes = ['LoginComp', 'RegisterComp', 'Reset1Comp', 'Reset2Comp']
+
+router.beforeEach(async (to, from, next) => {
+  if (store.state.loading) {
+    const token = VueCookies.get('user_token')
+
+    if (token) {
+      try {
+        let res = await axios.get('http://localhost:3000/users/verify', {withCredentials: true})
+
+        console.log(res)
+        if (res.data.userInfos) {
+          store.commit('SET_USER', res.data.userInfos)
+          store.commit('SET_LOADING', false)
+        }
+        else {
+          store.commit('SET_USER', null)
+          store.commit('SET_LOADING', false)
+          VueCookies.remove('user_token')
+        }
+      }
+      catch(err) {
+        console.log(err)
+        store.commit('SET_USER', null)
+        store.commit('SET_LOADING', false)
+        VueCookies.remove('user_token')
+      }
+    }
+    else {
+      store.commit('SET_USER', null)
+      store.commit('SET_LOADING', false)
+    }
+  }
+
+  if (!store.state.user && loggedRoutes.includes(to.name)) {
+    next('/login')
+  }
+  else if (store.state.user && unloggedRoutes.includes(to.name)) {
+    next('/')
+  }
+
+  next()
+})
+
+export default router

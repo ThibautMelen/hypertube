@@ -4,13 +4,14 @@ const mailTransporter = require('../../helpers/mail')
 const tokenHelper = require('../../helpers/token')
 const User = require('../../models/users')
 const WebTorrent = require('webtorrent')
+const mongoose = require('mongoose')
 
 const userSchema = Joi.object().keys({
     email: Joi.string().email({ minDomainSegments: 2 }),
     firstName: Joi.string().alphanum().min(1).max(30).required(),
     lastName: Joi.string().alphanum().min(1).max(30).required(),
     username: Joi.string().alphanum().min(3).max(20).required(),
-    password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
+    password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required().allow(''),
     language : Joi.string().valid('english', 'french').required(),
     profilePic: Joi.string().required()
 })
@@ -23,13 +24,13 @@ module.exports = {
         try {
             /* JOI User scheme validation */
             const result = Joi.validate({
-                email: 'toto@gmail.com',
-                firstName: 'Sofian',
-                lastName: 'Delhommeau',
-                username: 'sdelhomm',
-                password: 'toto4242',
-                language : 'english',
-                profilePic: 'https://pornhub.com'
+                email: req.body.email,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                username: req.body.username,
+                password: req.body.password,
+                language : req.body.language,
+                profilePic: 'https://google.com/'
             }, userSchema)
 
             /* If validation failed */
@@ -89,7 +90,7 @@ module.exports = {
             return res.status(400).json({success: false})
         }
         try {
-            let connectedUser = await User.findOne({email: req.body.email})
+            let connectedUser = await User.findOne({username: req.body.username})
 
             if (!connectedUser) {
                 return res.status(200).json({success: false})
@@ -98,6 +99,7 @@ module.exports = {
             let result = await passwordHelper.comparePassword(req.body.password, connectedUser.password)
 
             if (result === true) {
+                console.log(result)
                 const data = {
                     userId: connectedUser._id
                 }
@@ -107,7 +109,10 @@ module.exports = {
                     maxAge: '14d'
                 })
 
-                return res.status(200).json({success: true, token})
+                delete connectedUser.password
+                delete connectedUser.validationCode
+
+                return res.status(200).json({success: true, token, userInfos: connectedUser})
             }
             else {
                 return res.status(200).json({success: false})
@@ -119,19 +124,100 @@ module.exports = {
         }
     },
 
+    update: async (req, res) => {
+        if (!req.user || !req.body) {
+            return res.status(400).json({success: false})
+        }
+        try {
+            /* JOI User scheme validation */
+            const result = Joi.validate({
+                email: req.body.email,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                username: req.body.username,
+                password: req.body.password,
+                language : req.body.language,
+                profilePic: 'https://google.com/'
+            }, userSchema)
+
+            console.log(result)
+
+            /* If validation failed */
+            if (result.error !== null) {
+                return res.status(400).json({success: false})
+            }
+
+            let userExist = await User.findOne({email: result.value.email, username: result.value.username, _id: {$ne: req.user.userId}})
+
+            if (userExist) {
+                return res.status(200).json({success: false, error: result.value.email === userExist.email ? 'emailExists' : 'usernameExists'})
+            }
+
+            let user = await User.findById(req.user.userId)
+
+            if (!user) {
+                return res.status(400).json({success: false})
+            }
+
+            user.email = result.value.email
+            user.firstName = result.value.firstName
+            user.lastName = result.value.lastName
+            user.username = result.value.username
+            user.language = result.value.language
+
+            if (req.body.password) {
+                let password = await passwordHelper.hashPassword(result.value.password)
+                user.password = password
+            }
+
+            let updatedUser = await user.save()
+
+            delete updatedUser.password
+            delete updatedUser.validationCode
+
+            res.status(200).json({success: true, updatedUser})
+
+            // try {
+            //     await mailTransporter.sendMail({
+            //         from: 'Cornflux <matcha42xn@gmail.com>',
+            //         to: newUser.email,
+            //         subject: 'Welcome in Cornflux !',
+            //         text: `
+            //         Validation link : ${newUser.validationCode}
+            //         `
+            //     })
+            //     console.log(`Mail sent to ${newUsers.email}`)
+            // }
+            // catch(err) {
+            //     console.error('Mail error :', err)
+            // }
+        }
+        catch(err) {
+            console.log(err)
+            return res.status(500).json({success: false})
+        }
+    },
+
     verify: async (req, res) => {
-        if (!req.body || !req.body.token) {
+        console.log('hello')
+        if (!req.cookies.user_token) {
             return res.status(200).json({success: false})
         }
 
         try {
-            const token = req.body.token
+            const token = req.cookies.user_token
 
             let decodedToken = await tokenHelper.verifyJWTToken(token)
 
-            return res.status(200).json({success: true, data: decodedToken.data})
+            let userInfos = await User.findById(decodedToken.data.userId, {password: 0, validationCode: 0})
+
+            if (userInfos) {
+                return res.status(200).json({success: true, userInfos})
+            }
+            return res.status(200).json({success: false})
         }
         catch(error) {
+            console.log(error)
             return res.status(200).json({success: false})
         }
     },
@@ -152,5 +238,25 @@ module.exports = {
         })
 
         res.send('OK')
-    }
+    },
+
+    getUser: async (req, res) => {
+        if (!req.user || !req.params.id) {
+            return res.status(401).json({success: false})
+        }
+
+        try {
+            if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+                return res.status(200).json({success: true, user: null})
+            }
+
+            const user = await User.findById(req.params.id, {password: 0, validationCode: 0})
+
+            return res.status(200).json({success: true, user})
+        }
+        catch(error) {
+            console.log(error)
+            return res.status(500).json({success: false})
+        }
+    },
 }

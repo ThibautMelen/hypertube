@@ -17,11 +17,11 @@
                 <form @submit.prevent="register()">
                     <md-field>
                         <label>First Name</label>
-                        <md-input type="text" v-model="formdata.first_name"></md-input>
+                        <md-input type="text" v-model="formdata.firstName"></md-input>
                     </md-field>
                     <md-field>
                         <label>Last Name</label>
-                        <md-input type="text" v-model="formdata.last_name"></md-input>
+                        <md-input type="text" v-model="formdata.lastName"></md-input>
                     </md-field>
                     <md-field>
                         <label>Username</label>
@@ -30,8 +30,8 @@
                     <md-field>
                         <label for="font">Language</label>
                         <md-select name="font" id="font" type="text" v-model="formdata.language">
-                            <md-option value="fr">Français</md-option>
-                            <md-option value="en">English</md-option>
+                            <md-option value="french">Français</md-option>
+                            <md-option value="english">English</md-option>
                         </md-select>
                     </md-field>
                     <md-field>
@@ -54,14 +54,16 @@
 
 <script>
 
-// import '../styles/_global.scss'
+import axios from 'axios'
+import {getErrorMessage} from '../helpers'
+
 export default {
     data () {
         return {
             //INPUT INFOS
             formdata:{
-                first_name:'',
-                last_name:'',
+                firstName:'',
+                lastName:'',
                 username:'',
                 language:'',
                 email:'',
@@ -77,8 +79,8 @@ export default {
         //REGISTER FORM
         async register () {
             let data = {
-                first_name: this.formdata.first_name,
-                last_name: this.formdata.last_name,
+                firstName: this.formdata.firstName,
+                lastName: this.formdata.lastName,
                 username: this.formdata.username,
                 language: this.formdata.language,
                 email: this.formdata.email,
@@ -86,23 +88,21 @@ export default {
                 
             }
             console.log(data);
-            // AXIOS BDD
-            // try {
-            //     const res = await this.$api.post('/auth/register', data);
-            //     console.log(res.data);
-            //     console.log(res.status);
-            //     //Gestion des erreurs 203
-            //     if(res.data.error == "validation_error")
-            //         alert(res.data.message);
-            //     else if(res.data.error == "user_already_use")
-            //         alert(res.data.message);
-            //     else if(res.data.error == "email_already_use")
-            //         alert(res.data.message);
-            //     else if(res.data.success == "OK")
-            //         this.$router.push('/login');
-            // } catch (ex) {
-            //     console.log(ex);
-            // }
+
+            try {
+                const res = await axios.post('http://localhost:3000/users/register', data);
+                console.log(res.data);
+                console.log(res.status);
+
+                if (res.data.success) {
+                    this.$router.push('/login')
+                }
+                else {
+                    alert(getErrorMessage(res.data.error))
+                }
+            } catch (ex) {
+                console.log(ex)
+            }
         }
     },
     created() {

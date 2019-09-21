@@ -5,18 +5,18 @@
             <comp-nav v-if="true"/>
         </header>
 
-        <section class="user">
+        <section v-if="userinfo" class="user">
             <div class="head">
                 <img src="https://s3.eu-west-3.amazonaws.com/pikomit/users/5bffc19e34651952dd0ada21/Pw4X4LyTnD6aWDixGggskqzCYK81Ji1564665526290_400px.jpg" alt="">
                 <div class="info">
-                    <h1>{{this.userinfo.first_name}} {{this.userinfo.last_name}}</h1>
+                    <h1>{{this.userinfo.firstName}} {{this.userinfo.lastName}}</h1>
                     <h2>@{{this.userinfo.username}}</h2>
-                    <h3 v-if="this.userinfo.language == 'FR'">Français 🥖</h3>
-                    <h3 v-if="this.userinfo.language == 'EN'">Anglais ☕️</h3>
+                    <h3 v-if="this.userinfo.language == 'french'">Français 🥖</h3>
+                    <h3 v-if="this.userinfo.language == 'english'">Anglais ☕️</h3>
                 </div>
             </div>
 
-            <comp-catalog title="Last Show View 👀" v-if="true"/>
+            <comp-catalog title="Watched shows 👀" v-if="true"/>
 
             <div class="last_show">
 
@@ -29,16 +29,13 @@
 <script>
 import compNav from  '../components/Nav'
 import compCatalog from  '../components/Catalog'
+import axios from 'axios'
+import {getErrorMessage} from '../helpers'
 
 export default {
     data () {
         return {
-            userinfo:{
-                first_name:'Jack',
-                last_name:'Sparow',
-                username:'JackSp77',
-                language:'FR'
-            }
+            userinfo: null
         }
     },
     components: {
@@ -48,10 +45,37 @@ export default {
     computed: {
     },
     methods:{
+        async getUser() {
+            try {
+                if (this.$route.params.id) {
+                    const res = await axios.get(`http://localhost:3000/users/${this.$route.params.id}`, {withCredentials: true});
+                    console.log(res.data);
+                    console.log(res.status);
+
+                    if (res.data.success) {
+                        if (res.data.user) {
+                            this.userinfo = res.data.user
+                        }
+                        else {
+                            this.$router.push('/')
+                        }
+                    }
+                    else {
+                        alert(getErrorMessage(res.data.error))
+                    }
+                }
+                else {
+                    this.$router.push('/')
+                }
+            } catch (ex) {
+                console.log(ex)
+            }
+        }
     },
     created() {
     },
     mounted (){
+        this.getUser()
     }
 }
 

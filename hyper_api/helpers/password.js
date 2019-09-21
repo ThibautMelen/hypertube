@@ -13,7 +13,7 @@ module.exports = {
 
     comparePassword: async (password, hash) => {
         try {
-            let res = bcrypt.compare(password, hash)
+            let res = await bcrypt.compare(password, hash)
             if (res) {
                 return true
             }

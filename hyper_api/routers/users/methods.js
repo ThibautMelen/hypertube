@@ -30,7 +30,7 @@ module.exports = {
                 username: req.body.username,
                 password: req.body.password,
                 language : req.body.language,
-                profilePic: 'https://google.com/'
+                profilePic: req.body.profilePic
             }, userSchema)
 
             /* If validation failed */
@@ -137,7 +137,7 @@ module.exports = {
                 username: req.body.username,
                 password: req.body.password,
                 language : req.body.language,
-                profilePic: 'https://google.com/'
+                profilePic: req.body.profilePic
             }, userSchema)
 
             console.log(result)
@@ -164,6 +164,7 @@ module.exports = {
             user.lastName = result.value.lastName
             user.username = result.value.username
             user.language = result.value.language
+            user.profilePic = result.value.profilePic
 
             if (req.body.password) {
                 let password = await passwordHelper.hashPassword(result.value.password)

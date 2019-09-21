@@ -13,15 +13,15 @@
         <!-- BOX -->
         <div class="box-container">
             <div class="box fadeInDownBig">
-                <h2>Forgot Password ?</h2>
+                <h2>{{trad[`forgotPassword`]['english']}}</h2>
                 <form @submit.prevent="reset()">
-                    <p><i>We will send you an email with instructions on how to reset your password.</i></p>
+                    <p><i>{{trad[`wewill`]['english']}}</i></p>
                     <md-field>
                         <label>Email</label>
                         <md-input type="email" v-model="formdata.email"></md-input>
                     </md-field>
-                    <button class="reset-button hvr-forward">Email Me !</button>
-                    <router-link tag="a" to="/login" class="another">Login</router-link>
+                    <button class="reset-button hvr-forward">{{trad[`emailme`]['english']}}</button>
+                    <router-link tag="a" to="/login" class="another">{{trad[`signin`]['english']}}</router-link>
                 </form>
             </div>
         </div>
@@ -30,15 +30,16 @@
 </template>
 
 <script>
+import trad from '../trad'
 
-// import '../styles/_global.scss'
 export default {
     data () {
         return {
             //INPUT INFOS
             formdata:{
                 email:''
-            }
+            },
+            trad
         }
     },
     components: {

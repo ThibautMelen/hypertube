@@ -1,4 +1,6 @@
 const axios = require('axios')
+const Comment = require('../../models/comments')
+const User = require('../../models/users')
 
 module.exports = {
     search: async (req, res) => {
@@ -94,11 +96,43 @@ module.exports = {
             //     id: ytsResponse.data.data.movies[0].imdb_code
             // }
 
-            return res.status(200).json({success: true, movie: ytsResponse.data.data.movies[0]})
+            let comments = await Comment.find({videoId: ytsResponse.data.data.movies[0].imdb_code}).populate('user')
+
+            res.status(200).json({success: true, movie: ytsResponse.data.data.movies[0], comments})
+
+            let user = await User.findById(req.user.userId)
+
+            if (!user.watchedShows) {
+                user.watchedShows = []
+            }
+
+            user.watchedShows.push(ytsResponse.data.data.movies[0].imdb_code)
+            user.save()
         }
         catch(error) {
             console.error(error)
             return res.status(500).json({success: false})
         }
-    }
+    },
+
+    comment: async (req, res) => {
+        if (!req.user || !req.body) {
+            return res.status(400).json({success: false})
+        }
+
+        try {
+            let newComment = new Comment({
+                videoId: req.body.videoId,
+                user: req.user.userId,
+                text: req.body.text
+            })
+            await newComment.save()
+
+            return res.status(200).json({success: true})
+        }
+        catch(error) {
+            console.error(error)
+            return res.status(500).json({success: false})
+        }
+    } 
 }

@@ -17,7 +17,7 @@
                 v-model="searchQuery"
                 :md-options="[]"
                 md-layout="box">
-                <label>Search...</label>
+                <label>{{trad[`search`][$store.state.user.language]}}</label>
             </md-autocomplete>
 
 
@@ -29,12 +29,12 @@
 
             <!-- ACCOUNT -->
             <div class="account">
-                <img v-bind:src="`${userInfos.avatar}`" alt="avatar" class="hvr-up-min">
+                <img :src="`${this.$store.state.user.profilePic}`" alt="avatar" class="hvr-up-min">
                 <ul>
-                    <router-link tag="a" :to="`/profile/${this.$store.state.user._id}`"><li>Profile</li></router-link>
-                    <router-link tag="a" to="/settings"><li>Settings</li></router-link>
+                    <router-link tag="a" :to="`/profile/${this.$store.state.user._id}`"><li>{{trad[`profile`][$store.state.user.language]}}</li></router-link>
+                    <router-link tag="a" to="/settings"><li>{{trad[`settings`][$store.state.user.language]}}</li></router-link>
 
-                    <a @click="logout()"><li>log out</li></a>
+                    <a @click="logout()"><li>{{trad[`logout`][$store.state.user.language]}}</li></a>
                 </ul>
             </div>
 
@@ -43,10 +43,10 @@
         <!-- AUTH RIGHT -->
         <div v-else class="auth">
             <router-link tag="a" to="/login" class="logo">
-                <button class="hvr-up-min">login</button>
+                <button class="hvr-up-min">{{trad[`signin`][$store.state.user.language]}}</button>
             </router-link>
             <router-link tag="a" to="/register" class="logo">
-                <button class="hvr-up-min">register</button>
+                <button class="hvr-up-min">{{trad[`signup`][$store.state.user.language]}}</button>
             </router-link>
         </div>
 
@@ -57,16 +57,15 @@
 
 
 <script>
+import trad from '../trad'
 
 export default {
     props: ['value', 'showSearch'],
     data () {
         return {
             searchQuery: '',
-            userInfos: {
-                avatar: `https://s3.eu-west-3.amazonaws.com/pikomit/users/5d65017a357f9252bb73cd7a/zuc02XS4fqstLtESOZGAiVEgl6MjpF1566900850741_400px.jpg`
-            },
             newNotif: false,
+            trad
         }
     },
     watch: {
@@ -100,7 +99,6 @@ export default {
 	IMPORTING STYLE
 *****************************************************************/
 @import '../styles/_global.scss';
-
 
 
 /*****************************************************************

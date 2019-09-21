@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema({
     validationCode: {
         type: String,
         required: true
+    },
+    watchedShows: {
+        type: [String],
+        default: []
     }
 },
 {

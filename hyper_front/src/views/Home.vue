@@ -43,7 +43,7 @@
         </header>
 
         <comp-catalog
-            :title="!searchQuery ? `The Most Popular 🍿` : `Search result 🔍`"
+            :title="!searchQuery ? trad[`The Most Popular 🍿`][this.$store.state.user.language] : trad[`Search result 🔍`][this.$store.state.user.language]"
             :catalog="!searchQuery ? popularCatalog : searchCatalog"
             :loading="(!popularCatalog || popularCatalog.length < 1|| searchQuery) && searchLoading" />
 
@@ -55,6 +55,7 @@
 import compNav from  '../components/Nav'
 import compCatalog from  '../components/Catalog'
 import axios from 'axios'
+import trad from '../trad'
 
 import {showAt, hideAt} from 'vue-breakpoints'
 import { Carousel, Slide } from 'vue-carousel';
@@ -66,7 +67,8 @@ export default {
             searchDelayTimer: null,
             popularCatalog: [],
             searchCatalog: [],
-            searchLoading: true
+            searchLoading: true,
+            trad
         }
     },
     components: {

@@ -7,16 +7,15 @@
 
         <section v-if="userinfo" class="user">
             <div class="head">
-                <img src="https://s3.eu-west-3.amazonaws.com/pikomit/users/5bffc19e34651952dd0ada21/Pw4X4LyTnD6aWDixGggskqzCYK81Ji1564665526290_400px.jpg" alt="">
+                <img :src="this.userinfo.profilePic" alt="">
                 <div class="info">
                     <h1>{{this.userinfo.firstName}} {{this.userinfo.lastName}}</h1>
                     <h2>@{{this.userinfo.username}}</h2>
-                    <h3 v-if="this.userinfo.language == 'french'">Français 🥖</h3>
-                    <h3 v-if="this.userinfo.language == 'english'">Anglais ☕️</h3>
+                    <h3>{{trad[`lng`][$store.state.user.language]}}</h3>
                 </div>
             </div>
 
-            <comp-catalog title="Watched shows 👀" v-if="true"/>
+            <comp-catalog :title="trad[`lastShow`][$store.state.user.language]" v-if="true"/>
 
             <div class="last_show">
 
@@ -31,11 +30,13 @@ import compNav from  '../components/Nav'
 import compCatalog from  '../components/Catalog'
 import axios from 'axios'
 import {getErrorMessage} from '../helpers'
+import trad from '../trad'
 
 export default {
     data () {
         return {
-            userinfo: null
+            userinfo: null,
+            trad
         }
     },
     components: {
@@ -132,7 +133,6 @@ section.profile {
         }
 
     }
-
 }
 
 

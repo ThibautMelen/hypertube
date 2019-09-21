@@ -9,7 +9,7 @@
             <div v-if="loading" class="spinner-container">
                 <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
             </div>
-            <h2 v-else>This content was not found 😬</h2>
+            <h2 v-else>{{trad[`notFound`][this.$store.state.user.language]}}</h2>
         </section>
         <section v-else class="video">
 
@@ -26,9 +26,9 @@
             <aside class="infoMovie">
                 <h1>{{ this.movie.title}}</h1>
                 <h2 class="eggs">{{ this.movie.year}} - {{ parseFloat(this.movie.runtime / 60).toFixed(2) }}h</h2>
-                <div class="watched hvr-up-min">
-                    <button @click="watched($event)" class="hvr-rectangle-in"> Watched ?</button>
-                </div>
+                <!-- <div class="watched hvr-up-min">
+                    <button @click="watched($event)" class="hvr-rectangle-in">{{trad[`watched`][$store.state.user.language]}}</button>
+                </div> -->
 
                 <div class="imbd">
                     <img class="hvr-up-min" src="../assets/logo/imbd.png" alt="">
@@ -39,23 +39,16 @@
                     <li v-for="(item, index) in this.movie.genres" :key="index" class="hvr-up-min">{{ item }}</li>
                 </ul>
 
-                <vue-plyr class="trailer">
-                    <div class="plyr__video-embed">
-                        <iframe
-                        :src="`https://www.youtube.com/watch?v=${this.movie.yt_trailer_code}`"
-                        allowfullscreen allowtransparency allow="autoplay">
-                        </iframe>
-                    </div>
-                </vue-plyr>
+                <!-- TODO : REPLACE BY IMG YT -->
+                <img class="cover-inside" :src="this.movie.large_cover_image" alt="">
 
                 <div class="dcpt">
-                    <h2>Synopsis</h2>
+                    <h2>{{trad[`synopis`][$store.state.user.language]}}</h2>
                     <p>{{ this.movie.description_full }}</p>
                 </div>
 
-
                 <div class="cast">
-                    <h2>Director</h2>
+                    <h2>{{trad[`director`][$store.state.user.language]}}</h2>
                     <ul>
                         <li class="hvr-up-min" v-for="(item, index) in this.oldMovie.director" :key="index">
                             <img :src="item.url_small_image" alt="">
@@ -67,12 +60,12 @@
                 </div>
 
                 <div class="cast">
-                    <h2>Casting</h2>
+                    <h2>{{trad[`casting`][$store.state.user.language]}}</h2>
                     <ul>
                         <li class="hvr-up-min" v-for="(item, index) in this.oldMovie.cast" :key="index">
                             <img :src="item.url_small_image" alt="">
                             <div>
-                                <p>{{ item.name }} <i>play</i></p>
+                                <p>{{ item.name }} <i>{{trad[`play`][$store.state.user.language]}}</i></p>
                                 <p>{{ item.character_name }}</p>
                             </div>
                         </li>
@@ -81,19 +74,19 @@
 
 
                 <div class="comment">
-                    <h2>Comment</h2>
+                    <h2>{{trad[`comment`][$store.state.user.language]}}</h2>
 
                     <div class="newCom">
-                        <textarea type="text">I like so much this movie ! 💙😱</textarea>
-                        <button class="hvr-up-min">New Com</button>
+                        <textarea v-model="commentInput" type="text">I like so much this movie ! 💙😱</textarea>
+                        <button @click="postComment" class="hvr-up-min">{{trad[`newCom`][$store.state.user.language]}}</button>
                     </div>
 
                     <div class="comList">
                         <ul>
-                            <li class="hvr-up-min" v-for="(item, index) in this.oldMovie.coms" :key="index">
-                                <img :src="item.url_small_image" alt="">
+                            <li class="hvr-up-min" v-for="(item, index) in this.comments" :key="index">
+                                <img :src="item.user.profilePic" alt="">
                                 <div>
-                                    <p>{{ item.name }}</p>
+                                    <p>{{ item.user.username }} - {{ formatDate(item.createdAt) }}</p>
                                     <p>{{ item.text }}</p>
                                 </div>
                             </li>
@@ -101,10 +94,6 @@
                     </div>
 
                 </div>
-
-
-            
-            
             
             </aside>
 
@@ -117,6 +106,7 @@
 import compNav from  '../components/Nav'
 import axios from 'axios'
 import WebTorrent from 'webtorrent'
+import trad from '../trad'
 
 export default {
     data () {
@@ -158,21 +148,12 @@ export default {
                         "imdb_code": "0937239"
                     }
                 ],
-                coms: [
-                    {
-                        "name": "Jean Miche",
-                        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                        "url_small_image": "https://s3.eu-west-3.amazonaws.com/pikomit/users/5bfbddf776fd3817e1474e08/OVJbQPcvSI0Az3UAicw1zScbS2PCW01543251911479_75px.jpg",
-                    },
-                    {
-                        "name": "Eloise Bismila",
-                        "text": "Hendrerit dolor magna eget est lorem ipsum.",
-                        "url_small_image": "https://s3.eu-west-3.amazonaws.com/pikomit/users/5d3ee7eeaecac710d664cbe7/gnrt4GpziaEGCfy13gYxNzxxfsGuUM1567171874096_75px.jpg",
-                    }
-                ],
             },
             movie: null,
-            loading: true
+            comments: [],
+            commentInput: '',
+            loading: true,
+            trad
         }
     },
     components: {
@@ -182,30 +163,61 @@ export default {
     },
     methods:{
         //LOGOUT
-        async watched(event) {
-            // await alert(`You added this movie to your watched list`);
-            this.color = "#01a3a4";
-            this.width = "2000px";
+        // async watched(event) {
+        //     // await alert(`You added this movie to your watched list`);
+        //     this.color = "#01a3a4";
+        //     this.width = "2000px";
 
-            // let targetId = event.currentTarget.id;
-            // console.log(targetId); // returns 'foo'
-            // this
+        //     // let targetId = event.currentTarget.id;
+        //     // console.log(targetId); // returns 'foo'
+        //     // this
 
-        },
+        // },
         async getVideo (id) {
             try {
+                this.$store.commit('ADD_WATCHEDSHOW', id)
+                
                 const res = await axios.get(`http://localhost:3000/shows/play/${id}`, {withCredentials: true});
                 console.log(res.data);
                 console.log(res.status);
 
                 if (res.data.success) {
                     this.movie = res.data.movie
+                    this.comments = res.data.comments
                 }
                 this.loading = false
             } catch (ex) {
                 console.log(ex)
                 this.loading = false
             }
+        },
+        async postComment() {
+            this.comments.push({
+                videoId: this.$route.params.id,
+                text: this.commentInput,
+                user: this.$store.state.user,
+                createdAt: new Date()
+            })
+
+            try {
+                const data = {
+                    videoId: this.$route.params.id,
+                    text: this.commentInput
+                }
+
+                this.commentInput = ''
+
+                const res = await axios.post(`http://localhost:3000/shows/comment`, data, {withCredentials: true})
+                console.log(res.data);
+                console.log(res.status)
+            } catch (ex) {
+                console.log(ex)
+            }
+        },
+        formatDate(date) {
+            date = new Date(date)
+
+            return `${date.getDay()}/${date.getMonth()}/${date.getYear()}`
         }
 
     },
@@ -374,7 +386,10 @@ section.player {
                 width: 100%;
                 margin-top: 10px;
             }
-
+            img.cover-inside {
+                border-radius: 15px;
+                margin-top: 15px;
+            }
             div.dcpt {
                 h2 {
                     margin-top: 15px;
@@ -466,7 +481,7 @@ section.player {
                     ul {
                     display: flex;
                     justify-content: row;
-                    flex-direction: row;
+                    flex-direction: column-reverse;
                         li {
                             display: flex;
                             flex-direction: row; 
@@ -512,7 +527,7 @@ section.player {
 /*****************************************************************
     MIDDLE SCREEN
 *****************************************************************/
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 800px) {
     section.video  {
         padding: 85px 1% 20px 1%;
 

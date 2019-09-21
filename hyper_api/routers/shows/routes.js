@@ -16,5 +16,8 @@ router.route('/popular')
 router.route('/play/:id')
 .get(auth, methods.play)
 
+router.route('/comment')
+.post(auth, methods.comment)
+
 
 module.exports = router

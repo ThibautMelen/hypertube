@@ -7,20 +7,20 @@
 
         <section class="container">
             <div class="editProfile">
-                <h1>Edit profile</h1>
+                <h1>{{trad[`editSet`][$store.state.user.language]}}</h1>
 
                 <div class="box fadeInDownBig">
                     <form @submit.prevent="update()">
                         <md-field>
-                            <label>First Name</label>
+                            <label>{{trad[`fName`][$store.state.user.language]}}</label>
                             <md-input type="text" v-model="formdata.firstName"></md-input>
                         </md-field>
                         <md-field>
-                            <label>Last Name</label>
+                            <label>{{trad[`lName`][$store.state.user.language]}}</label>
                             <md-input type="text" v-model="formdata.lastName"></md-input>
                         </md-field>
                         <md-field>
-                            <label>Username</label>
+                            <label>{{trad[`username`][$store.state.user.language]}}</label>
                             <md-input type="text" v-model="formdata.username"></md-input>
                         </md-field>
                         <md-field>
@@ -35,11 +35,13 @@
                             <md-input type="email" v-model="formdata.email"></md-input>
                         </md-field>
                         <md-field>
-                            <label>Password</label>
+                            <label>{{trad[`editSet`][$store.state.user.language]}}</label>
                             <md-input type="password" v-model="formdata.password">></md-input>
                         </md-field>
+
+                        <comp-slctimg v-model="formdata.selectedProfilePic" /> 
                     
-                        <button class="settings-button hvr-forward">Edit Settings</button>
+                        <button class="settings-button hvr-forward">{{trad[`editSet`][$store.state.user.language]}}</button>
                     </form>
                 </div>
                 
@@ -52,8 +54,10 @@
 
 <script>
 import compNav from  '../components/Nav'
+import compSlctimg from  '../components/Slctimg'
 import axios from 'axios'
 import {getErrorMessage} from '../helpers'
+import trad from '../trad'
 
 export default {
     data () {
@@ -65,12 +69,15 @@ export default {
                 username: this.$store.state.user.username,
                 language: this.$store.state.user.language,
                 email: this.$store.state.user.email,
-                password: ''
-            }
+                password: '',
+                selectedProfilePic: this.$store.state.user.profilePic,
+            },
+            trad
         }
     },
     components: {
         compNav,
+        compSlctimg
     },
     computed: {
     },
@@ -82,7 +89,8 @@ export default {
                 username: this.formdata.username,
                 language: this.formdata.language,
                 email: this.formdata.email,
-                password: this.formdata.password
+                password: this.formdata.password,
+                profilePic: this.formdata.selectedProfilePic
             }
             console.log(data)
 
@@ -97,6 +105,7 @@ export default {
                     if (res.data.updatedUser) {
                         console.log(res.data.updatedUser)
                         this.$store.commit('SET_USER', res.data.updatedUser)
+                        this.$router.push('/');
                     }
                 }
                 else {
@@ -105,6 +114,7 @@ export default {
             } catch (ex) {
                 console.log(ex)
             }
+            
         }
     },
     created() {
@@ -144,7 +154,6 @@ section.settings {
                 font-weight: 700;
                 margin-bottom: 20px;
             }
-
 
             button.settings-button {
                 color: #fff;

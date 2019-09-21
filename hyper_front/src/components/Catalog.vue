@@ -7,12 +7,11 @@
             <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
         </div>
         <div class="listMovies">
-            <h2 v-if="!loading && (!catalog || catalog.length < 1)">No results matching your query 😔</h2>
+            <h2 v-if="!loading && (!catalog || catalog.length < 1)"></h2>
             <router-link tag="div" :to="`/player/${item.id}`" v-for="(item, index) in catalog" :key="index">
                 <div class="hvr-up-min infoMovie" :style="{'background-image':`url(${item.image})`}">
-                    <p>{{ item.title }}</p>
+                    <p><span v-if="$store.state.user && $store.state.user.watchedShows && $store.state.user.watchedShows.includes(item.id)">✅</span> {{ item.title }} </p>
                     <p>{{ item.year }} ● {{ parseFloat(item.runtime / 60).toFixed(2) }}h ● {{ item.rating }} ⭐️</p>
-                    <p></p>
                 </div>
             </router-link>
         </div>
@@ -124,6 +123,8 @@ section.catalog {
                 p:first-child {
                     padding: 15px 35px 5px 35px;
                     border-radius: 15px 15px 0px 0px;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis;
                 }
             }
 

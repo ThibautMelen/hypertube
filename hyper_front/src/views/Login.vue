@@ -13,19 +13,19 @@
         <!-- BOX -->
         <div class="box-container">
             <div class="box lightSpeedIn">
-                <h2>Sign in</h2>
+                <h2>{{trad['signin']['english']}}</h2>
                 <form @submit.prevent="login()">
                     <md-field>
-                        <label>Username</label>
+                        <label>{{trad[`username`]['english']}}</label>
                         <md-input type="text" v-model="formdata.username"></md-input>
                     </md-field>
                     <md-field>
-                        <label>Password</label>
+                        <label>{{trad[`pass`]['english']}}</label>
                         <md-input type="password" v-model="formdata.password"></md-input>
                     </md-field>
-                    <button class="login-button hvr-forward">Sign In</button>
-                    <router-link tag="a" to="/reset1" class="another">Forgot Password ?</router-link>
-                    <router-link tag="a" to="/register" class="another">Sign Up Now !</router-link>
+                    <button class="login-button hvr-forward">{{trad['signin']['english']}}</button>
+                    <router-link tag="a" to="/reset1" class="another">{{trad['forgotPassword']['english']}}</router-link>
+                    <router-link tag="a" to="/register" class="another">{{trad['signup']['english']}}</router-link>
                 </form>
             </div>
         </div>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-
+import trad from '../trad'
 import axios from 'axios'
 import helpers from '../helpers'
 
@@ -45,7 +45,8 @@ export default {
             formdata:{
                 username:'',
                 password:''
-            }
+            },
+            trad
         }
     },
     components: {

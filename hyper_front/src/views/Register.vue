@@ -13,18 +13,18 @@
         <!-- BOX -->
         <div class="box-container">
             <div class="box flipInY">
-                <h2>Sign up</h2>
+                <h2>{{trad[`signup`]['english']}}</h2>
                 <form @submit.prevent="register()">
                     <md-field>
-                        <label>First Name</label>
+                        <label>{{trad[`fName`]['english']}}</label>
                         <md-input type="text" v-model="formdata.firstName"></md-input>
                     </md-field>
                     <md-field>
-                        <label>Last Name</label>
+                        <label>{{trad[`lName`]['english']}}</label>
                         <md-input type="text" v-model="formdata.lastName"></md-input>
                     </md-field>
                     <md-field>
-                        <label>Username</label>
+                        <label>{{trad[`username`]['english']}}</label>
                         <md-input type="text" v-model="formdata.username"></md-input>
                     </md-field>
                     <md-field>
@@ -39,12 +39,14 @@
                         <md-input type="email" v-model="formdata.email"></md-input>
                     </md-field>
                     <md-field>
-                        <label>Password</label>
+                        <label>{{trad[`pass`]['english']}}</label>
                         <md-input type="password" v-model="formdata.password">></md-input>
                     </md-field>
-                
-                    <button class="register-button hvr-forward">Sign Up</button>
-                    <router-link tag="a" to="/login" class="another">Login</router-link>
+                    
+                    <comp-slctimg v-model="formdata.selectedProfilePic" /> 
+
+                    <button class="register-button hvr-forward">{{trad[`signup`]['english']}}</button>
+                    <router-link tag="a" to="/login" class="another">{{trad[`signin`]['english']}}</router-link>
                 </form>
             </div>
         </div>
@@ -53,7 +55,8 @@
 </template>
 
 <script>
-
+import trad from '../trad'
+import compSlctimg from  '../components/Slctimg'
 import axios from 'axios'
 import {getErrorMessage} from '../helpers'
 
@@ -67,11 +70,15 @@ export default {
                 username:'',
                 language:'',
                 email:'',
-                password:''
-            }
+                password:'',
+                selectedProfilePic: 'https://occ-0-55-56.1.nflxso.net/art/59fbc/1ce9bcd3d6f26195c1ab49cd2c691f5fc8f59fbc.png'
+            },
+            trad
+
         }
     },
     components: {
+        compSlctimg
     },
     computed: {
     },
@@ -85,7 +92,7 @@ export default {
                 language: this.formdata.language,
                 email: this.formdata.email,
                 password: this.formdata.password,
-                
+                profilePic: this.formdata.selectedProfilePic
             }
             console.log(data);
 

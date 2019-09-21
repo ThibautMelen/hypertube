@@ -1,0 +1,36 @@
+{
+  "message": "bonjour i18n !!",
+  "auth": {
+    "title": "Connexion",
+    "titlereg": "S'inscrire",
+    "username": "Nom d'utilisateur",
+    "pass": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "signup": "S'inscrire dès maintenant",
+    "fName": "Prénom",
+    "lName": "Nom de famille",
+    "lang": "Language",
+    "login": "Se connecter",
+    "editSet": "Modifier le profile"
+  },
+  "nav": {
+    "search": "Rechercher...",
+    "profile": "Profile",
+    "settings": "Paramètres",
+    "logout": "Se déconnceter"
+  },
+  "home": {
+    "title": "Les plus populaires 🍿",
+    "last": "Derniers show vu 👀"
+  },
+  "player": {
+    "synopis": "Résumé",
+    "watched": "Vu ?",
+    "director": "Directeur",
+    "casting": "Casting",
+    "play": "joue",
+    "comment": "Commentaire",
+    "newCom": "Nouveau Commentaire"
+
+  }
+}

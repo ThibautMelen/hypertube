@@ -13,19 +13,19 @@
         <!-- BOX -->
         <div class="box-container">
             <div class="box lightSpeedIn">
-                <h2>Sign in</h2>
+                <h2>{{$t('auth.title')}}</h2>
                 <form @submit.prevent="login()">
                     <md-field>
-                        <label>Username</label>
+                        <label>{{$t('auth.username')}}</label>
                         <md-input type="text" v-model="formdata.username"></md-input>
                     </md-field>
                     <md-field>
-                        <label>Password</label>
+                        <label>{{$t('auth.pass')}}</label>
                         <md-input type="password" v-model="formdata.password"></md-input>
                     </md-field>
-                    <button class="login-button hvr-forward">Sign In</button>
-                    <router-link tag="a" to="/reset1" class="another">Forgot Password ?</router-link>
-                    <router-link tag="a" to="/register" class="another">Sign Up Now !</router-link>
+                    <button class="login-button hvr-forward">{{$t('auth.title')}}</button>
+                    <router-link tag="a" to="/reset1" class="another">{{$t('auth.forgotPassword')}}</router-link>
+                    <router-link tag="a" to="/register" class="another">{{$t('auth.signup')}}</router-link>
                 </form>
             </div>
         </div>

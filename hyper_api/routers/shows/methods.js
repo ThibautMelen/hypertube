@@ -2,6 +2,7 @@ const axios = require('axios')
 const Comment = require('../../models/comments')
 const User = require('../../models/users')
 const torrentStream = require('torrent-stream')
+const OS = require('opensubtitles-api')
 
 module.exports = {
     search: async (req, res) => {
@@ -96,6 +97,8 @@ module.exports = {
                 image: ytsResponse.data.data.movies[0].large_cover_image,
                 id: ytsResponse.data.data.movies[0].imdb_code
             }
+
+            const OpenSubtitles = new OS({ useragent:'TemporaryUserAgent' })
 
             let comments = await Comment.find({videoId: ytsResponse.data.data.movies[0].imdb_code}).populate('user')
 

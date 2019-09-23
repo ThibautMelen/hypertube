@@ -96,13 +96,13 @@ module.exports = {
                 return res.status(200).json({success: false})
             }
 
-            if (!connectedUser.validated) {
-                return res.status(200).json({success: false, error: 'notValidated'})
-            }
-
             let result = await passwordHelper.comparePassword(req.body.password, connectedUser.password)
 
             if (result === true) {
+                if (!connectedUser.validated) {
+                    return res.status(200).json({success: false, error: 'notValidated'})
+                }
+
                 console.log(result)
                 const data = {
                     userId: connectedUser._id
@@ -119,7 +119,7 @@ module.exports = {
                 return res.status(200).json({success: true, token, userInfos: connectedUser})
             }
             else {
-                return res.status(200).json({success: false})
+                return res.status(200).json({success: false, error: 'loginError'})
             }
         }
         catch(err) {

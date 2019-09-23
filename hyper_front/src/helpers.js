@@ -1,7 +1,8 @@
 const errorMessages = {
     'usernameExists': 'The username is not available',
     'emailExists':  'This email is already used',
-    'loginError': 'Wrong username or password, please retry'
+    'loginError': 'Wrong username or password, please retry',
+    'notValidated': 'Please check your mailbox to validate your account'
 }
 
 export default {

@@ -19,7 +19,8 @@
                     <video :poster="movie.background_image || movie.background_image_original">
                         <source v-if="qualities['720']" :src="`http://localhost:3000/shows/stream/${qualities['720'].hash}`" type="video/mp4" size="720">
                         <source v-if="qualities['1080']" :src="`http://localhost:3000/shows/stream/${qualities['1080'].hash}`" type="video/mp4" size="1080">
-                        <!-- <track kind="captions" label="English" srclang="en" src="../assets/video/caption.vtt" default> -->
+                        <track kind="captions" label="English" srclang="en" src="http://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt" default>
+                        <track kind="captions" label="Français" srclang="fr" src="http://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">
                     </video>
                 </vue-plyr>
             </section>

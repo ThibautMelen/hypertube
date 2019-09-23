@@ -25,4 +25,8 @@ router.route('/:id')
 router.route('/update')
 .patch(auth, methods.update)
 
+router.route('/validate/:key')
+.get(auth, methods.validate)
+
+
 module.exports = router

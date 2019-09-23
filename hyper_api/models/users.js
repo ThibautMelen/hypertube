@@ -35,8 +35,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    validated: {
+        type: Boolean,
+        default: false
+    },
     watchedShows: {
-        type: [String],
+        type: [mongoose.Types.Mixed],
         default: []
     }
 },

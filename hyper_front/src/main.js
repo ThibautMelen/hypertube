@@ -7,7 +7,9 @@ import VueCarousel from 'vue-carousel'
 import VueCookies from 'vue-cookies'
 import store from './store'
 import VuePlyr from 'vue-plyr'
+import Vuelidate from 'vuelidate'
 
+Vue.use(Vuelidate)
 Vue.use(VuePlyr)
 Vue.use(VueCookies)
 Vue.use(VueMaterial)

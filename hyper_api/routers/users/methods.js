@@ -64,20 +64,20 @@ module.exports = {
 
             res.status(200).json({success: true})
 
-            // try {
-            //     await mailTransporter.sendMail({
-            //         from: 'Cornflux <matcha42xn@gmail.com>',
-            //         to: newUser.email,
-            //         subject: 'Welcome in Cornflux !',
-            //         text: `
-            //         Validation link : ${newUser.validationCode}
-            //         `
-            //     })
-            //     console.log(`Mail sent to ${newUsers.email}`)
-            // }
-            // catch(err) {
-            //     console.error('Mail error :', err)
-            // }
+            try {
+                await mailTransporter.sendMail({
+                    from: 'Cornflux <matcha42xn@gmail.com>',
+                    to: newUser.email,
+                    subject: 'Welcome in Cornflux !',
+                    text: `
+                    Validation link : ${newUser.validationCode}
+                    `
+                })
+                console.log(`Mail sent to ${newUsers.email}`)
+            }
+            catch(err) {
+                console.error('Mail error :', err)
+            }
         }
         catch(err) {
             console.log(err)
@@ -94,6 +94,10 @@ module.exports = {
 
             if (!connectedUser) {
                 return res.status(200).json({success: false})
+            }
+
+            if (!connectedUser.validated) {
+                return res.status(200).json({success: false, error: 'notValidated'})
             }
 
             let result = await passwordHelper.comparePassword(req.body.password, connectedUser.password)
@@ -187,7 +191,7 @@ module.exports = {
             //         Validation link : ${newUser.validationCode}
             //         `
             //     })
-            //     console.log(`Mail sent to ${newUsers.email}`)
+            //     console.log(`Mail sent to ${newUser.email}`)
             // }
             // catch(err) {
             //     console.error('Mail error :', err)
@@ -258,6 +262,23 @@ module.exports = {
         catch(error) {
             console.log(error)
             return res.status(500).json({success: false})
+        }
+    },
+
+    validate: async (req, res) => {
+        if (req.params.key) {
+            try {
+                await User.updateOne({validationCode: req.params.key}, {validated: true})
+                res.redirect('http://localhost:8080/login')
+                console.log('New account')
+            }
+            catch(error) {
+                console.error(error)
+                return res.redirect('http://localhost:8080')
+            }
+        }
+        else {
+            res.redirect('http://localhost:8080')
         }
     },
 }

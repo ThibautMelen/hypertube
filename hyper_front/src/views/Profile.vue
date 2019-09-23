@@ -15,7 +15,9 @@
                 </div>
             </div>
 
-            <comp-catalog :title="trad[`lastShow`][$store.state.user.language]" v-if="true"/>
+            <comp-catalog
+            :title="trad[`lastShow`][$store.state.user.language]"
+            :catalog="userinfo.watchedShows" />
 
             <div class="last_show">
 

@@ -16,11 +16,13 @@ const store = new Vuex.Store({
         SET_LOADING (state, loading) {
             state.loading = loading
         },
-        ADD_WATCHEDSHOW (state, showId) {
+        ADD_WATCHEDSHOW (state, show) {
             if (!state.user.watchedShows) {
                 state.user.watchedShows = []
             }
-            state.user.watchedShows.push(showId)
+            if (state.user.watchedShows.findIndex(v => v.id === show.id) < 0) {
+                state.user.watchedShows.push(show)
+            }
         }
     }
 })

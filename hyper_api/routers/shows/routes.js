@@ -16,6 +16,9 @@ router.route('/popular')
 router.route('/play/:id')
 .get(auth, methods.play)
 
+router.route('/stream/:hash')
+.get(auth, methods.stream)
+
 router.route('/comment')
 .post(auth, methods.comment)
 

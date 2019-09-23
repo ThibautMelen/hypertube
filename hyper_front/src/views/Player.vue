@@ -16,9 +16,10 @@
             <section class="videoPlayer">
                 <!-- video element -->
                 <vue-plyr>
-                    <video poster="poster.png" src="video.mp4">
-                        <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4" size="1080">
-                        <track kind="captions" label="English" srclang="en" src="../assets/video/caption.vtt" default>
+                    <video :poster="movie.background_image || movie.background_image_original">
+                        <source v-if="qualities['720']" :src="`http://localhost:3000/shows/stream/${qualities['720'].hash}`" type="video/mp4" size="720">
+                        <source v-if="qualities['1080']" :src="`http://localhost:3000/shows/stream/${qualities['1080'].hash}`" type="video/mp4" size="1080">
+                        <!-- <track kind="captions" label="English" srclang="en" src="../assets/video/caption.vtt" default> -->
                     </video>
                 </vue-plyr>
             </section>
@@ -26,9 +27,6 @@
             <aside class="infoMovie">
                 <h1>{{ this.movie.title}}</h1>
                 <h2 class="eggs">{{ this.movie.year}} - {{ parseFloat(this.movie.runtime / 60).toFixed(2) }}h</h2>
-                <!-- <div class="watched hvr-up-min">
-                    <button @click="watched($event)" class="hvr-rectangle-in">{{trad[`watched`][$store.state.user.language]}}</button>
-                </div> -->
 
                 <div class="imbd">
                     <img class="hvr-up-min" src="../assets/logo/imbd.png" alt="">
@@ -83,13 +81,13 @@
 
                     <div class="comList">
                         <ul>
-                            <li class="hvr-up-min" v-for="(item, index) in this.comments" :key="index">
+                            <router-link tag="li" :to="`/profile/${item.user._id}`" class="hvr-up-min" v-for="(item, index) in this.comments" :key="index">
                                 <img :src="item.user.profilePic" alt="">
                                 <div>
                                     <p>{{ item.user.username }} - {{ formatDate(item.createdAt) }}</p>
                                     <p>{{ item.text }}</p>
                                 </div>
-                            </li>
+                            </router-link>
                         </ul>
                     </div>
 
@@ -153,7 +151,11 @@ export default {
             comments: [],
             commentInput: '',
             loading: true,
-            trad
+            trad,
+            qualities: {
+                '720': null,
+                '1080': null
+            }
         }
     },
     components: {
@@ -162,28 +164,21 @@ export default {
     computed: {
     },
     methods:{
-        //LOGOUT
-        // async watched(event) {
-        //     // await alert(`You added this movie to your watched list`);
-        //     this.color = "#01a3a4";
-        //     this.width = "2000px";
-
-        //     // let targetId = event.currentTarget.id;
-        //     // console.log(targetId); // returns 'foo'
-        //     // this
-
-        // },
         async getVideo (id) {
             try {
-                this.$store.commit('ADD_WATCHEDSHOW', id)
-                
                 const res = await axios.get(`http://localhost:3000/shows/play/${id}`, {withCredentials: true});
                 console.log(res.data);
                 console.log(res.status);
 
                 if (res.data.success) {
+                    if (res.data.movie.torrents) {
+                        this.qualities['720'] = res.data.movie.torrents.find(v => v.quality && v.quality.includes('720'))
+                        this.qualities['1080'] = res.data.movie.torrents.find(v => v.quality && v.quality.includes('1080'))
+                    }
                     this.movie = res.data.movie
                     this.comments = res.data.comments
+
+                    this.$store.commit('ADD_WATCHEDSHOW', res.data.parsedMovie)
                 }
                 this.loading = false
             } catch (ex) {
@@ -192,6 +187,9 @@ export default {
             }
         },
         async postComment() {
+            if (!this.commentInput) {
+                return
+            }
             this.comments.push({
                 videoId: this.$route.params.id,
                 text: this.commentInput,
@@ -215,9 +213,7 @@ export default {
             }
         },
         formatDate(date) {
-            date = new Date(date)
-
-            return `${date.getDay()}/${date.getMonth()}/${date.getYear()}`
+            return Intl.DateTimeFormat('fr-FR').format(new Date(date))
         }
 
     },
@@ -230,25 +226,6 @@ export default {
         else {
             this.$router.push('/')
         }
-
-        // var client = new WebTorrent()
-        // var magnetURI = `magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent`
-
-        // client.on('error', function (err) {
-        //     console.error('ERROR: ' + err.message)
-        // })
-        
-        // client.add(magnetURI, function (torrent) {
-
-        //     console.log('yooooo')
-        //     console.log('Client is downloading:', torrent.infoHash)
-            
-        //     torrent.files.forEach(function (file) {
-
-        //         console.log(file)
-        //         file.appendTo('body')
-        //     })
-        // })
     }
 }
 

@@ -10,7 +10,7 @@
             <h2 v-if="!loading && (!catalog || catalog.length < 1)"></h2>
             <router-link tag="div" :to="`/player/${item.id}`" v-for="(item, index) in catalog" :key="index">
                 <div class="hvr-up-min infoMovie" :style="{'background-image':`url(${item.image})`}">
-                    <p><span v-if="$store.state.user && $store.state.user.watchedShows && $store.state.user.watchedShows.includes(item.id)">✅</span> {{ item.title }} </p>
+                    <p><span v-if="$store.state.user && $store.state.user.watchedShows && $store.state.user.watchedShows.findIndex(v => v.id === item.id) >= 0">✅</span> {{ item.title }} </p>
                     <p>{{ item.year }} ● {{ parseFloat(item.runtime / 60).toFixed(2) }}h ● {{ item.rating }} ⭐️</p>
                 </div>
             </router-link>

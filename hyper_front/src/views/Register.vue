@@ -15,35 +15,41 @@
             <div class="box flipInY">
                 <h2>{{trad[`signup`]['english']}}</h2>
                 <form @submit.prevent="register()">
-                    <md-field>
+                    <md-field :class="{'md-invalid': $v.formdata.firstName.$error}">
                         <label>{{trad[`fName`]['english']}}</label>
-                        <md-input type="text" v-model="formdata.firstName"></md-input>
+                        <md-input type="text" v-model="$v.formdata.firstName.$model"></md-input>
+                        <span class="md-error">There is an error</span>
                     </md-field>
-                    <md-field>
+                    <md-field :class="{'md-invalid': $v.formdata.lastName.$error}">
                         <label>{{trad[`lName`]['english']}}</label>
-                        <md-input type="text" v-model="formdata.lastName"></md-input>
+                        <md-input type="text" v-model="$v.formdata.lastName.$model"></md-input>
+                        <span class="md-error">There is an error</span>
                     </md-field>
-                    <md-field>
+                    <md-field :class="{'md-invalid': $v.formdata.username.$error}">
                         <label>{{trad[`username`]['english']}}</label>
-                        <md-input type="text" v-model="formdata.username"></md-input>
+                        <md-input type="text" v-model="$v.formdata.username.$model"></md-input>
+                        <span class="md-error">There is an error</span>
                     </md-field>
-                    <md-field>
+                    <md-field :class="{'md-invalid': $v.formdata.language.$error}">
                         <label for="font">Language</label>
-                        <md-select name="font" id="font" type="text" v-model="formdata.language">
+                        <md-select name="font" id="font" type="text" v-model="$v.formdata.language.$model">
                             <md-option value="french">Français</md-option>
                             <md-option value="english">English</md-option>
                         </md-select>
+                        <span class="md-error">There is an error</span>
                     </md-field>
-                    <md-field>
+                    <md-field :class="{'md-invalid': $v.formdata.email.$error}">
                         <label>Email</label>
-                        <md-input type="email" v-model="formdata.email"></md-input>
+                        <md-input type="email" v-model="$v.formdata.email.$model"></md-input>
+                        <span class="md-error">There is an error</span>
                     </md-field>
-                    <md-field>
+                    <md-field :class="{'md-invalid': $v.formdata.password.$error}">
                         <label>{{trad[`pass`]['english']}}</label>
-                        <md-input type="password" v-model="formdata.password">></md-input>
+                        <md-input type="password" v-model="$v.formdata.password.$model"></md-input>
+                        <span class="md-error">There is an error</span>
                     </md-field>
                     
-                    <comp-slctimg v-model="formdata.selectedProfilePic" /> 
+                    <comp-slctimg v-model="$v.formdata.selectedProfilePic.$model" /> 
 
                     <button class="register-button hvr-forward">{{trad[`signup`]['english']}}</button>
                     <router-link tag="a" to="/login" class="another">{{trad[`signin`]['english']}}</router-link>
@@ -59,6 +65,7 @@ import trad from '../trad'
 import compSlctimg from  '../components/Slctimg'
 import axios from 'axios'
 import {getErrorMessage} from '../helpers'
+import { required, minLength, maxLength, between, email, alpha, alphaNum } from 'vuelidate/lib/validators'
 
 export default {
     data () {
@@ -74,7 +81,6 @@ export default {
                 selectedProfilePic: 'https://occ-0-55-56.1.nflxso.net/art/59fbc/1ce9bcd3d6f26195c1ab49cd2c691f5fc8f59fbc.png'
             },
             trad
-
         }
     },
     components: {
@@ -82,9 +88,51 @@ export default {
     },
     computed: {
     },
+    validations: {
+        formdata:{
+            firstName: {
+                minLength: minLength(2),
+                maxLength: maxLength(30),
+                required,
+                alpha
+            },
+            lastName: {
+                minLength: minLength(2),
+                maxLength: maxLength(30),
+                required,
+                alpha
+            },
+            username: {
+                minLength: minLength(2),
+                maxLength: maxLength(30),
+                alphaNum,
+                required
+            },
+            language: {
+                required,
+                enum: value => ['english', 'french'].includes(value) ? true : false
+            },
+            email: {
+                required,
+                email
+            },
+            password: {
+                required,
+                minLength: minLength(6),
+                strong: value => value.match(/^(?=.*[a-zA-Z])(?=.*[0-9]).+$/) ? true : false
+            },
+            selectedProfilePic: {
+                required
+            }
+        },
+    },
     methods:{
         //REGISTER FORM
         async register () {
+            this.$v.$touch()
+            if (this.$v.$invalid) {
+                return false
+            }
             let data = {
                 firstName: this.formdata.firstName,
                 lastName: this.formdata.lastName,

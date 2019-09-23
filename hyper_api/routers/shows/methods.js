@@ -1,6 +1,7 @@
 const axios = require('axios')
 const Comment = require('../../models/comments')
 const User = require('../../models/users')
+const torrentStream = require('torrent-stream')
 
 module.exports = {
     search: async (req, res) => {
@@ -87,26 +88,27 @@ module.exports = {
                 return res.status(404).json({success: false})
             }
 
-            // let movie = {
-            //     title: ytsResponse.data.data.movies[0].title,
-            //     year: ytsResponse.data.data.movies[0].year,
-            //     rating: ytsResponse.data.data.movies[0].rating,
-            //     runtime: ytsResponse.data.data.movies[0].runtime,
-            //     image: ytsResponse.data.data.movies[0].large_cover_image,
-            //     id: ytsResponse.data.data.movies[0].imdb_code
-            // }
+            let parsedMovie = {
+                title: ytsResponse.data.data.movies[0].title,
+                year: ytsResponse.data.data.movies[0].year,
+                rating: ytsResponse.data.data.movies[0].rating,
+                runtime: ytsResponse.data.data.movies[0].runtime,
+                image: ytsResponse.data.data.movies[0].large_cover_image,
+                id: ytsResponse.data.data.movies[0].imdb_code
+            }
 
             let comments = await Comment.find({videoId: ytsResponse.data.data.movies[0].imdb_code}).populate('user')
 
-            res.status(200).json({success: true, movie: ytsResponse.data.data.movies[0], comments})
+            res.status(200).json({success: true, movie: ytsResponse.data.data.movies[0], comments, parsedMovie})
 
             let user = await User.findById(req.user.userId)
 
             if (!user.watchedShows) {
                 user.watchedShows = []
             }
-
-            user.watchedShows.push(ytsResponse.data.data.movies[0].imdb_code)
+            if (user.watchedShows.findIndex(v => v.id === parsedMovie.id) < 0) {
+                user.watchedShows.push(parsedMovie)
+            }
             user.save()
         }
         catch(error) {
@@ -115,8 +117,56 @@ module.exports = {
         }
     },
 
+    stream: async (req, res) => {
+        try {
+            if (!req.user || !req.params.hash) {
+                return res.status(400).json({success: false})
+            }
+            const engine = torrentStream(`magnet:?xt=urn:btih:${req.params.hash}`)
+
+            engine.on('ready', function() {
+                engine.files.forEach((file, i) => {
+                    console.log('FILE NAME :', file.name)
+                    if (file.name.includes('.mp4')) {
+                        const fileSize = file.length
+                        const range = req.headers.range
+
+                        if (range) {
+                            const parts = range.replace(/bytes=/, "").split("-")
+                            const start = parseInt(parts[0], 10)
+                            const end = parts[1] 
+                            ? parseInt(parts[1], 10)
+                            : fileSize - 1
+                            const chunksize = (end - start) + 1
+                            const stream = file.createReadStream({start, end})
+                            const head = {
+                            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+                            'Accept-Ranges': 'bytes',
+                            'Content-Length': chunksize,
+                            'Content-Type': 'video/mp4',
+                            }
+                            res.writeHead(206, head)
+                            stream.pipe(res)
+                        }
+                        else {
+                            const head = {
+                            'Content-Length': fileSize,
+                            'Content-Type': 'video/mp4',
+                            }
+                            res.writeHead(200, head)
+                            file.createReadStream().pipe(res)
+                        }
+                    }
+                })
+            })
+        }
+        catch(error) {
+            console.error(error)
+        }
+    },
+
     comment: async (req, res) => {
-        if (!req.user || !req.body) {
+        if (!req.user || !req.body || !req.body.text || !req.body.videoId) {
             return res.status(400).json({success: false})
         }
 

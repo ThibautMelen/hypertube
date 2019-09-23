@@ -73,7 +73,7 @@ export default {
                     this.$router.push('/')
                 }
                 else {
-                    alert(helpers.getErrorMessage('loginError'))
+                    alert(helpers.getErrorMessage(res.data.error || 'loginError'))
                 }
             } catch (ex) {
                 console.log(ex)

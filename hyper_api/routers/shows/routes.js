@@ -17,7 +17,10 @@ router.route('/play/:id')
 .get(auth, methods.play)
 
 router.route('/stream/:hash')
-.get(auth, methods.stream)
+.get(methods.stream)
+
+// router.route('/subtitle/:url')
+// .get(auth, methods.subtitle)
 
 router.route('/comment')
 .post(auth, methods.comment)

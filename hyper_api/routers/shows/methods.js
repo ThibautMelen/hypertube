@@ -100,9 +100,26 @@ module.exports = {
 
             const OpenSubtitles = new OS({ useragent:'TemporaryUserAgent' })
 
+            let OpenSubtitlesResponse = await OpenSubtitles.login()
+
+            let subtitles = await OpenSubtitles.search({imdbid: parsedMovie.id})
+
+            console.log(subtitles)
+
+            let team = await axios.get(`https://api.themoviedb.org/3/movie/${ytsResponse.data.data.movies[0].imdb_code}/credits?api_key=6391f6cd254ef907e6975891ef627f61`)
+            let directors = []
+            let casting = []
+
+            if (team.data.crew) {
+                directors = team.data.crew.filter(v => v['job'] === 'Director')
+            }
+            if (team.data.cast) {
+                casting = team.data.cast.slice(0, 4)
+            }
+
             let comments = await Comment.find({videoId: ytsResponse.data.data.movies[0].imdb_code}).populate('user')
 
-            res.status(200).json({success: true, movie: ytsResponse.data.data.movies[0], comments, parsedMovie})
+            res.status(200).json({success: true, movie: ytsResponse.data.data.movies[0], comments, parsedMovie, subtitles, directors, casting})
 
             let user = await User.findById(req.user.userId)
 
@@ -122,7 +139,7 @@ module.exports = {
 
     stream: async (req, res) => {
         try {
-            if (!req.user || !req.params.hash) {
+            if (!req.params.hash) {
                 return res.status(400).json({success: false})
             }
             const engine = torrentStream(`magnet:?xt=urn:btih:${req.params.hash}`)
@@ -167,6 +184,24 @@ module.exports = {
             console.error(error)
         }
     },
+
+    // subtitle: async (req, res) => {
+    //     if (!req.user || !req.params.url) {
+    //         return res.status(400).json({success: false})
+    //     }
+
+    //     try {
+    //         let response = await axios.get('req.params.url', {responseType: 'blob'})
+
+    //         console.log(response.data)
+
+    //         res.send('OK')
+    //     }
+    //     catch(error) {
+    //         console.error(error)
+    //         return res.status(404).json({success: false})
+    //     }
+    // },
 
     comment: async (req, res) => {
         if (!req.user || !req.body || !req.body.text || !req.body.videoId) {

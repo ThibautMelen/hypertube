@@ -11,7 +11,7 @@ const userSchema = Joi.object().keys({
     firstName: Joi.string().alphanum().min(1).max(30).required(),
     lastName: Joi.string().alphanum().min(1).max(30).required(),
     username: Joi.string().alphanum().min(3).max(20).required(),
-    password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required().allow(''),
+    password: Joi.string().regex(/^(?=.*[a-zA-Z])(?=.*[0-9]).+$/).required().allow(''),
     language : Joi.string().valid('english', 'french').required(),
     profilePic: Joi.string().required()
 })

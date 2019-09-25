@@ -16,11 +16,13 @@
             <section class="videoPlayer">
                 <!-- video element -->
                 <vue-plyr>
-                    <video :poster="movie.background_image || movie.background_image_original">
+                    <video crossorigin="anonymous" controls :poster="movie.background_image || movie.background_image_original">
                         <source v-if="qualities['720']" :src="`http://localhost:3000/shows/stream/${qualities['720'].hash}`" type="video/mp4" size="720">
                         <source v-if="qualities['1080']" :src="`http://localhost:3000/shows/stream/${qualities['1080'].hash}`" type="video/mp4" size="1080">
-                        <track kind="captions" label="English" srclang="en" src="http://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt" default>
-                        <track kind="captions" label="Français" srclang="fr" src="http://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">
+                        <track v-if="subtitles['fr'] && subtitles['fr'].vtt" kind="captions" label="Français" srclang="fr" :src="subtitles['fr'].vtt" :default="this.$store.state.user.language === 'french'">
+                        <track v-if="subtitles['en'] && subtitles['en'].vtt" kind="captions" label="English" srclang="en" :src="subtitles['en'].vtt">
+                        <track v-if="subtitles['es'] && subtitles['es'].vtt" kind="captions" label="Spanish" srclang="es" :src="subtitles['es'].vtt">
+                        <track v-if="subtitles['ru'] && subtitles['ru'].vtt" kind="captions" label="Russian" srclang="ru" :src="subtitles['ru'].vtt">
                     </video>
                 </vue-plyr>
             </section>
@@ -49,8 +51,8 @@
                 <div class="cast">
                     <h2>{{trad[`director`][$store.state.user.language]}}</h2>
                     <ul>
-                        <li class="hvr-up-min" v-for="(item, index) in this.oldMovie.director" :key="index">
-                            <img :src="item.url_small_image" alt="">
+                        <li class="hvr-up-min" v-for="(item, index) in this.directors" :key="index">
+                            <img :src="`https://image.tmdb.org/t/p/w154${item.profile_path}`" alt="">
                             <div>
                                 <p>{{ item.name }}</p>
                             </div>
@@ -61,11 +63,11 @@
                 <div class="cast">
                     <h2>{{trad[`casting`][$store.state.user.language]}}</h2>
                     <ul>
-                        <li class="hvr-up-min" v-for="(item, index) in this.oldMovie.cast" :key="index">
-                            <img :src="item.url_small_image" alt="">
+                        <li class="hvr-up-min" v-for="(item, index) in this.casting" :key="index">
+                            <img :src="`https://image.tmdb.org/t/p/w154${item.profile_path}`" alt="">
                             <div>
                                 <p>{{ item.name }} <i>{{trad[`play`][$store.state.user.language]}}</i></p>
-                                <p>{{ item.character_name }}</p>
+                                <p>{{ item.character }}</p>
                             </div>
                         </li>
                     </ul>
@@ -101,6 +103,8 @@
     </section>
 </template>
 
+<script src="includes/videosub-0.9.9.js"></script>
+
 <script>
 import compNav from  '../components/Nav'
 import axios from 'axios'
@@ -110,6 +114,11 @@ import trad from '../trad'
 export default {
     data () {
         return {
+            subtitles: {
+                label: "French Captions",
+                src: "../assets/Avengers.vtt",
+                srclang: "fr"
+            },
             oldMovie: {
                 title: "Jurassic Park",
                 date: "1993",
@@ -128,21 +137,21 @@ export default {
                 cast: [
                     {
                         "name": "Bruce Willis",
-                        "character_name": "Det. Jack Mosley",
+                        "character": "Det. Jack Mosley",
                         "url_small_image": "https://yts.lt/assets/images/actors/thumb/nm0000246.jpg",
                     },
                     {
                         "name": "David Morse",
-                        "character_name": "Det. Frank Nugent",
+                        "character": "Det. Frank Nugent",
                         "url_small_image": "https://yts.lt/assets/images/actors/thumb/nm0001556.jpg",
                     },
                     {
                         "name": "Casey Sander",
-                        "character_name": "Capt. Dan Gruber",
+                        "character": "Capt. Dan Gruber",
                     },
                     {
                         "name": "Tom Wlaschiha",
-                        "character_name": "Bus Passenger",
+                        "character": "Bus Passenger",
                         "url_small_image": "https://yts.lt/assets/images/actors/thumb/nm0937239.jpg",
                         "imdb_code": "0937239"
                     }
@@ -156,7 +165,10 @@ export default {
             qualities: {
                 '720': null,
                 '1080': null
-            }
+            },
+            subtitles: {},
+            casting: [],
+            directors: []
         }
     },
     components: {
@@ -178,6 +190,11 @@ export default {
                     }
                     this.movie = res.data.movie
                     this.comments = res.data.comments
+                    this.subtitles = res.data.subtitles
+                    this.casting = res.data.casting
+                    this.directors = res.data.directors
+
+                    console.log('http://dl.opensubtitles.org/en/download/subformat-vtt/src-api/vrf-19ec0c5e/sid-WH6NnTqj61t1Pyoft5ejcGvCtQ2/filead/1955947805')
 
                     this.$store.commit('ADD_WATCHEDSHOW', res.data.parsedMovie)
                 }
